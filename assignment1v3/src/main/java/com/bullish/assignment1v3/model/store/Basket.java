@@ -1,6 +1,6 @@
 package com.bullish.assignment1v3.model.store;
 
-public class Basket implements Discountable{
+public class Basket extends AbstractBasket, implements Discountable{
 
     @Override
     public Float buyOneGetFiftyPercentOffNextOne() {
