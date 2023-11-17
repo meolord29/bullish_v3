@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.bullish</groupId>
-	<artifactId>assignment1_v3</artifactId>
+	<artifactId>assignment1v3</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>assignment1_v3</name>
-	<description>Assignment version 3</description>
+	<name>assignment1v3</name>
+	<description>Assignment_1_version_3</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
