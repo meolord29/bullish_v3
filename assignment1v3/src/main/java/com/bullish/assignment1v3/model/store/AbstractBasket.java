@@ -1,7 +1,5 @@
 package com.bullish.assignment1v3.model.store;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,13 +17,12 @@ public abstract class AbstractBasket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name="price")
-    private Float price;
-
     @Column(name="username")
-    private String clientUsername;
+    private String username;
 
     @Column(name="productName")
     private String productName;
 
+    @Column(name="totalSelected")
+    private Integer totalSelected;
 }

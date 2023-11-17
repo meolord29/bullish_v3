@@ -4,9 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "product")
-public class Product extends AbstractItem{
+@Table(name = "confirmedPurchase")
+public class ConfirmedPurchase extends AbstractBasket{
     
     
-
 }

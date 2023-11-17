@@ -1,18 +1,10 @@
 package com.bullish.assignment1v3.model.users;
 
-public class Client extends AbstractUser implements ProductAddable, ProductRemovable{
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "client")
+public class Client extends AbstractUser{
     
-
-    // Allows the client the add products into the basket
-    public void addProduct(){
-
-        throw new UnsupportedOperationException("Unimplemented method 'addProduct'");
-    }; 
-
-    // Allows the client the remove products into the basket
-    public void removeProduct(){
-
-        throw new UnsupportedOperationException("Unimplemented method 'removeProduct'");
-    };
-
 }
