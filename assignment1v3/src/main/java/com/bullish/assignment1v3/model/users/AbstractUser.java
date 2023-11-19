@@ -1,6 +1,9 @@
 package com.bullish.assignment1v3.model.users;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,15 +13,24 @@ import lombok.Setter;
 @Setter
 abstract class AbstractUser {
 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name="username")
-    public String username;
+    private String username;
 
     @Column(name = "password")
-    public String password;
+    private String password;
 
     public AbstractUser(String username, String password){
         this.username = username;
         this.password = password;
+    }
+
+    public AbstractUser(){
+        
     }
 
 }

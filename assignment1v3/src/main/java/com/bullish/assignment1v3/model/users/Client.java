@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity
+@Entity(name = "Client")
 @Table(name = "client")
 public class Client extends AbstractUser{
 
@@ -17,4 +17,9 @@ public class Client extends AbstractUser{
     // Client is the person who is interacting with the front end part of the software
     // Client is also the user that is in charge of their own Basket
     
+    @Autowired
+    public Client(){
+        super();
+    }
+
 }

@@ -10,5 +10,5 @@ import com.bullish.assignment1v3.model.store.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long>{
 	
-	Optional<Product> findByUsername(String username);
+	Optional<Product> findByName(String name);
 }
