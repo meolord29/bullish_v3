@@ -1,7 +1,9 @@
-package com.bullish.assignment1v3.service;
+package com.bullish.assignment1v3.service.contracts;
 
-public interface ProductAddableService {
+import com.bullish.assignment1v3.repository.ProductRepository;
+
+public interface ProductAddableService { // CRUD - Create
     
-    public void addProduct();
+    public void addProduct(ProductRepository productRepository);
 
 }

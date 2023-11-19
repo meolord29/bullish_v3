@@ -7,7 +7,5 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "basket")
 public class Basket extends AbstractBasket{
-    
-    
 
 }

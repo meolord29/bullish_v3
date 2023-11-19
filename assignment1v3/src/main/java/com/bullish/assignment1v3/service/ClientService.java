@@ -22,7 +22,10 @@ implements ProductReadableService,
 BasketReadableService, RemovableFromBasketService, AddableToBasketService, UpdatableBasketService, 
 AddableConfirmedPurchaseService, ReadableConfirmedPurchaseService{
 
-    // CRUD METHODS - Client is able to do all of the CRUD methods within the basket
+    // Client can only view what products exist -> R of CRUD within the Library of PRODUCTS
+    // Client can fully manage their Basket -> All CRUD Functionalities within the BASKET
+    // Client can buy and review products that are in the basket -> CR of CRUD within the CONFIRMED PURCHASE of the basket
+
     @Autowired
 	private ProductRepository productRepository;
 
@@ -79,6 +82,12 @@ AddableConfirmedPurchaseService, ReadableConfirmedPurchaseService{
     @Override
     public void addConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) {
         // _C_RUD for Basket Table
+        // First: Check if Product is a non zero count in the products table, else abort the method
+        // Second: method checks if product exists within the basket, else abort the method
+        // Third: method requests Admin Service to delete product from the product Table with specified amount
+        // Forth: method calls the updateBasket to update the counter of specific product counter
+        // Fifth: method adds product to confirmedPurchase table -> update method with +n
+
 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addConfirmedPurchase'");

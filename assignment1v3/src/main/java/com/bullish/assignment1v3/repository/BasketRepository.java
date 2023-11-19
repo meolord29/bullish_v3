@@ -1,10 +1,14 @@
 package com.bullish.assignment1v3.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.bullish.assignment1v3.model.store.Basket;
 
 @Repository
 public interface BasketRepository extends JpaRepository<Basket,Long>{
 	
-	Optional<Client> findByUsername(String username);
+	Optional<Basket> findByUsername(String username);
 }
