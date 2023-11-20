@@ -37,7 +37,7 @@ AddableConfirmedPurchaseService, ReadableConfirmedPurchaseService{
 
 
     @Override
-    public Product readProduct(ProductRepository productRepository) {// Read for Product Table
+    public Optional<Product> readProduct(String productName) {// Read for Product Table
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readProduct'");
     }

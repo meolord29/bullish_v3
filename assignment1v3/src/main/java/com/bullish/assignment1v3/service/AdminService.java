@@ -24,6 +24,9 @@ AdminReadable{
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     // CRUD METHODS - Admin is able to do all of the CRUD methods within the system
 
     @Override
@@ -39,15 +42,13 @@ AdminReadable{
     }
 
     @Override
-    public Product readProduct(ProductRepository productRepository) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readProduct'");
+    public Optional<Product> readProduct(String productName) {
+        return productRepository.findByName(productName);
     }
 
     @Override
-    public void addProduct(ProductRepository productRepository) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addProduct'");
+    public void addProduct(Product product) {
+        productRepository.save(product);
     }
 
     @Override

@@ -5,8 +5,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class AbstractItem {
 
     @Id
@@ -25,4 +29,15 @@ public abstract class AbstractItem {
     @Column(name="totalAvailable")
     private Integer totalAvailable;
     
+    public AbstractItem(String name, Float price, Float discount, Integer totalAvailable){
+        this.name = name;
+        this.price = price;
+        this.discount = discount;
+        this.totalAvailable = totalAvailable;
+    }
+
+    public AbstractItem(){
+        
+    }
+
 }

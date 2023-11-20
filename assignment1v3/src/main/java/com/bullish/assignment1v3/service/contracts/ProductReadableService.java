@@ -1,10 +1,11 @@
 package com.bullish.assignment1v3.service.contracts;
 
+import java.util.Optional;
+
 import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.repository.ProductRepository;
 
 public interface ProductReadableService { // CRUD - Read
     
-    public Product readProduct(ProductRepository productRepository);
+    public Optional<Product> readProduct(String productName);
     
 }
