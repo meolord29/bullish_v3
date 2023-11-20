@@ -1,7 +1,12 @@
 package com.bullish.assignment1v3.controller;
 
+import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,44 +18,77 @@ import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.AdminRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
+import com.bullish.assignment1v3.service.AdminService;
+import com.bullish.assignment1v3.service.ClientService;
 
 @RestController
 public class AdminController {
-    
-    private final AdminRepository adminRepository;
-    private final ProductRepository productRepository;
-    private final ClientRepository clientRepository;
 
-    AdminController(AdminRepository adminRepository, ProductRepository productRepository, ClientRepository clientRepository) {
-        this.adminRepository = adminRepository;
-        this.productRepository = productRepository;
-        this.clientRepository = clientRepository;
+    @Autowired
+    private AdminService adminService;
+
+    AdminController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
 
     // Admin related operations
     @GetMapping("/admins")
-    List<Admin> getAllAdmin(){
-        return adminRepository.findAll();
+    ResponseEntity<List<Admin>> getAllAdmin(){
+        List<Admin> admins = adminService.readAllAdmins();
+
+        if (admins != null && !admins.isEmpty()) {
+            return new ResponseEntity<>(admins, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/employees/{id}")
-    Admin one(@PathVariable Long id) {
-        
-        return adminRepository.findById(id)
-        .orElseThrow(() -> new AdminNotFoundException(id));
+    @GetMapping("/admins/{username}")
+    ResponseEntity<Admin> getAdmin(@PathVariable String username) {
+        Optional<Admin> admin = adminService.readAdmin(username);
+
+        if (admin.isPresent()) {
+            return new ResponseEntity<>(admin.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // Client related operations
     @GetMapping("/clients")
-    List<Client> getAllClients(){
-        return clientRepository.findAll();
+    ResponseEntity<List<Client>> getAllClients(){
+        List<Client> clients = adminService.readAllClients();
+
+        if (clients != null && !clients.isEmpty()) {
+            return new ResponseEntity<>(clients, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/clients/{username}")
+    ResponseEntity<Admin> getClient(@PathVariable String username) {
+        Optional<Admin> admin = adminService.readAdmin(username);
+
+        if (admin.isPresent()) {
+            return new ResponseEntity<>(admin.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
     }
 
 
     // Product related operations
     @GetMapping("/products")
-    List<Product> getAllProducts(){
-        return productRepository.findAll();
+    ResponseEntity<List<Product>> getAllProducts(){
+        List<Product> products = adminService.readAllProducts();
+
+        if (products != null && !products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

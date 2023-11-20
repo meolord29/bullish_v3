@@ -1,5 +1,6 @@
 package com.bullish.assignment1v3.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
+import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
@@ -94,5 +96,6 @@ AddableConfirmedPurchaseService, ReadableConfirmedPurchaseService{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addConfirmedPurchase'");
     }
+
     
 }
