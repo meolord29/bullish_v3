@@ -16,9 +16,6 @@ public class checkRootAdminExistWhenComparedToHandMadeRootAdmin {
     @Autowired
     private AdminService adminService;
 
-    @Autowired
-    private AdminRepository adminRepository;
-
     @Test
     void injectedAdminRetrievableFromAdminRepository(){
 

@@ -7,11 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.repository.ProductRepository;
 import com.bullish.assignment1v3.service.AdminService;
-
-import jakarta.persistence.Column;
 
 @SpringBootTest
 public class AdminProductCRUDTest {
@@ -35,13 +32,13 @@ public class AdminProductCRUDTest {
         adminService.addProduct(product1);
 
         // Act
-        
-        Product retrievedAdmin = adminService.readProduct(name).get();
-
+        Product retrievedProduct = adminService.readProduct(name).get();
 
         // Assert
             // Check that the root admin exists in the database
-        assertThat(product1.getName()).isEqualTo(retrievedAdmin.getName());
-        assertThat(product1.getPrice()).isEqualTo(retrievedAdmin.getPrice());
+        assertThat(product1.getName()).isEqualTo(retrievedProduct.getName());
+        assertThat(product1.getPrice()).isEqualTo(retrievedProduct.getPrice());
+        assertThat(product1.getDiscount()).isEqualTo(retrievedProduct.getDiscount());
+        assertThat(product1.getTotalAvailable()).isEqualTo(retrievedProduct.getTotalAvailable());
     }
 }

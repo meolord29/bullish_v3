@@ -5,8 +5,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
+@Setter
+@Getter
 public abstract class AbstractBasket {
 
     @Id
@@ -21,4 +25,14 @@ public abstract class AbstractBasket {
 
     @Column(name="totalSelected")
     private Integer totalSelected;
+
+    public AbstractBasket(String username, String productName, Integer totalSelected){
+        this.username = username;
+        this.productName = productName;
+        this.totalSelected = totalSelected;
+    }
+
+    public AbstractBasket(){
+        
+    }
 }
