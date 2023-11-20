@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bullish.assignment1v3.model.users.Admin;
-import com.bullish.assignment1v3.repository.AdminRepository;
 import com.bullish.assignment1v3.service.AdminService;
 
 @SpringBootTest
@@ -26,7 +25,6 @@ public class checkRootAdminExistWhenComparedToHandMadeRootAdmin {
 
         // Act
         Admin retrievedAdmin = adminService.readAdmin(username).get();
-
 
         // Assert
             // Check that the root admin exists in the database

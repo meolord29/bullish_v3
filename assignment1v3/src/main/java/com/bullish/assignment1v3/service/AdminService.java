@@ -2,6 +2,7 @@ package com.bullish.assignment1v3.service;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +37,20 @@ AdminReadable{
     }
 
     @Override
-    public void updateProduct(ProductRepository productRepository) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+    public void updateProduct(String name, Product productUpdated) {
+
+        ModelMapper mapper = new ModelMapper();
+        // this will tell ModelMapper to ignore null fields when mapping the source (newData) to the destination (user)
+        mapper.getConfiguration().setSkipNullEnabled(true);
+        
+        Optional<Product> productOpt = readProduct(name);
+
+        if (productOpt.isPresent()){
+            Product product = productOpt.get();
+            mapper.map(productUpdated, product);
+            productRepository.save(product);
+        }
+
     }
 
     @Override
