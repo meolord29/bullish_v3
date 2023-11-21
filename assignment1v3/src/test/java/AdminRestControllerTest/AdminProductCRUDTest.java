@@ -1,12 +1,6 @@
-package AdminServiceTest;
+package AdminRestControllerTest;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,21 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
-import com.bullish.assignment1v3.controller.Exceptions.ProductAlreadyExistsException;
 import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.service.AdminService;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = Assignment1v3Application.class)
 @AutoConfigureMockMvc
@@ -156,7 +145,7 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productInit)
 		.when()
-        .post("/products/product")
+        .post("admin_access/products/product")
         .then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
@@ -168,7 +157,7 @@ public class AdminProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -182,7 +171,7 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productUpdated)
 		.when()
-        .put("/products/product")
+        .put("admin_access/products/product")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -195,7 +184,7 @@ public class AdminProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -221,7 +210,7 @@ public class AdminProductCRUDTest {
 		.when()
         .put("admin_access/products/product")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 
@@ -278,7 +267,7 @@ public class AdminProductCRUDTest {
         .when()
         .get("admin_access/products/product1")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 

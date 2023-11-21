@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.service.AdminService;
-import com.bullish.assignment1v3.service.ClientService;
 
 @RestController
 @RequestMapping("/admin_access")

@@ -16,24 +16,29 @@ import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.AdminRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
-import com.bullish.assignment1v3.service.contracts.AdminAddable;
-import com.bullish.assignment1v3.service.contracts.AdminReadable;
-import com.bullish.assignment1v3.service.contracts.AdminUpdatable;
-import com.bullish.assignment1v3.service.contracts.AdminsReadable;
-import com.bullish.assignment1v3.service.contracts.ProductAddableService;
-import com.bullish.assignment1v3.service.contracts.ProductReadableService;
-import com.bullish.assignment1v3.service.contracts.ProductDeletableService;
-import com.bullish.assignment1v3.service.contracts.ProductUpdatableService;
+import com.bullish.assignment1v3.service.contracts.admin.AdminAddableService;
+import com.bullish.assignment1v3.service.contracts.admin.AdminDeletableService;
+import com.bullish.assignment1v3.service.contracts.admin.AdminReadableService;
+import com.bullish.assignment1v3.service.contracts.admin.AdminUpdatableService;
+import com.bullish.assignment1v3.service.contracts.admin.AdminsReadableService;
+import com.bullish.assignment1v3.service.contracts.client.ClientReadableService;
+import com.bullish.assignment1v3.service.contracts.client.ClientsReadableService;
+import com.bullish.assignment1v3.service.contracts.product.ProductAddableService;
+import com.bullish.assignment1v3.service.contracts.product.ProductDeletableService;
+import com.bullish.assignment1v3.service.contracts.product.ProductReadableService;
+import com.bullish.assignment1v3.service.contracts.product.ProductUpdatableService;
+import com.bullish.assignment1v3.service.contracts.product.ProductsReadableService;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 
 
 @Service
-public class AdminService implements ProductAddableService, ProductReadableService, ProductUpdatableService, ProductDeletableService,
-AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
+public class AdminService implements 
+ProductAddableService, ProductReadableService, ProductUpdatableService, ProductDeletableService, ProductsReadableService,
+AdminReadableService, AdminAddableService, AdminUpdatableService, AdminDeletableService, AdminsReadableService,
+ClientReadableService, ClientsReadableService
+{
 
     @Autowired
     private AdminRepository adminRepository;
@@ -63,7 +68,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
             return new ResponseEntity<>(product, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -73,6 +78,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
         return productOpt;
     }
 
+    @Override
     public ResponseEntity<List<Product>> readAllProducts() {
         List<Product> products = productRepository.findAll();
 
@@ -96,6 +102,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
         }
     }
 
+    @Override
     public ResponseEntity<Product> deleteProduct(Product product) {
         Optional<Product> productOpt = readProduct(product.getName());
 
@@ -118,6 +125,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
         return adminOpt;
     }
 
+    @Override
     public ResponseEntity<List<Admin>> readAllAdmins() {
         List<Admin> admins = adminRepository.findAll();
 
@@ -141,6 +149,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
         }
     }
 
+    @Override
     public ResponseEntity<Admin> deleteAdmin(Admin admin) {
         Optional<Admin> adminOpt = readAdmin(admin.getUsername());
 
@@ -173,6 +182,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
         }
     }
 
+    @Override
     public Optional<Client> readClient(String username) {
 
         Optional<Client> clientOpt = clientRepository.findByUsername(username);
@@ -181,6 +191,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
 
     }
 
+    @Override
     public ResponseEntity<List<Client>> readAllClients() {
         List<Client> clients = clientRepository.findAll();
 

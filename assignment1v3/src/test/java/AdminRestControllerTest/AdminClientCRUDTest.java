@@ -1,4 +1,4 @@
-package AdminServiceTest;
+package AdminRestControllerTest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,5 +25,6 @@ public class AdminClientCRUDTest {
 
     //@Test
 
+    
 
 }

@@ -1,4 +1,4 @@
-package com.bullish.assignment1v3.service.contracts;
+package com.bullish.assignment1v3.service.contracts.basket;
 
 import com.bullish.assignment1v3.model.store.Product;
 

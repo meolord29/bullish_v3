@@ -1,4 +1,4 @@
-package AdminServiceTest;
+package AdminRestControllerTest;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,7 +14,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
-import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
