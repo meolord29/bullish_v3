@@ -44,6 +44,9 @@ ClientReadableService, ClientsReadableService
     private AdminRepository adminRepository;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -55,21 +58,7 @@ ClientReadableService, ClientsReadableService
     @Override
     @Transactional
     public ResponseEntity<Product> updateProduct(Product productUpdated) {
-
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setSkipNullEnabled(true);
-
-        Optional<Product> productOpt = readProduct(productUpdated.getName());
-
-        if (productOpt.isPresent()){
-            Product product = productOpt.get();
-            mapper.map(productUpdated, product);
-            productRepository.save(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return productService.updateProduct(productUpdated);
     }
 
     @Override
@@ -80,48 +69,25 @@ ClientReadableService, ClientsReadableService
 
     @Override
     public ResponseEntity<List<Product>> readAllProducts() {
-        List<Product> products = productRepository.findAll();
-
-        if (products != null && !products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return productService.readAllProducts();
     }
 
     @Override
     @Transactional
     public ResponseEntity<Product> addProduct(Product product) {
-        Optional<Product> productOpt = readProduct(product.getName());
-
-        if (productOpt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            productRepository.save(product);
-            return new ResponseEntity<>(product, HttpStatus.CREATED);
-        }
+        return productService.addProduct(product);
     }
 
     @Override
     public ResponseEntity<Product> deleteProduct(Product product) {
-        Optional<Product> productOpt = readProduct(product.getName());
-
-        if (productOpt.isPresent()) {
-            productRepository.delete(productOpt.get());
-            return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
-            
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return productService.deleteProduct(product);
     }
-
 
 
     // ADMIN CRUD SERVICES
     @Override
     public Optional<Admin> readAdmin(String username) {
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
-
         return adminOpt;
     }
 

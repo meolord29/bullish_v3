@@ -49,6 +49,9 @@ ProductsReadableService
 
     @Autowired
 	private ProductRepository productRepository;
+    
+    @Autowired
+    private ProductService productService;
 
     @Autowired
 	private BasketRepository basketRepository;
@@ -112,23 +115,16 @@ ProductsReadableService
     // All to do with products
     @Override
     public Optional<Product> readProduct(String productName) {
-        Optional<Product> productOpt = productRepository.findByName(productName);
-        return productOpt;
+        return productService.readProduct(productName);
     }
 
     @Override
     public ResponseEntity<List<Product>> readAllProducts() {
-        List<Product> products = productRepository.findAll();
-
-        if (products != null && !products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return productService.readAllProducts();
     }
 
     
-
+    // All to do with basket
     @Override
     public void updateBasket(BasketRepository basketRepository) {// CR_U_D for Basket Table
         // TODO Auto-generated method stub
