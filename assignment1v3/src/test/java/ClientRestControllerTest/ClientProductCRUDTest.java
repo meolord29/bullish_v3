@@ -11,12 +11,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
 import com.bullish.assignment1v3.controller.ClientController;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
+import com.bullish.assignment1v3.repository.ProductRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
@@ -28,14 +32,40 @@ public class ClientProductCRUDTest {
     @Autowired
     private ClientController clientController;
 
+    // @Autowired
+    // private AdminController adminController;
+
     @Autowired
-    private AdminController adminController;
+    private ProductRepository productRepository;
+
 
     @BeforeEach
     public void setup() {
         RestAssuredMockMvc.standaloneSetup(clientController);
-        RestAssuredMockMvc.standaloneSetup(adminController);
+        //RestAssuredMockMvc.standaloneSetup(adminController);
     }
+
+    //private MockMvc mockMvc1;
+    //private MockMvc mockMvc2;
+
+    // @BeforeEach
+    // public void setup() {
+    //     mockMvc1 = MockMvcBuilders.standaloneSetup(clientController).build();
+    //     mockMvc2 = MockMvcBuilders.standaloneSetup(adminController).build();
+
+    //     RestAssuredMockMvc.mockMvc(mockMvc1);
+
+    //     RestAssuredMockMvc.mockMvc(mockMvc2);
+    // }
+
+    
+
+    //@BeforeEach
+    //public void setup() {
+    //    Controller controller1 = new controller();
+    //
+    //
+    //}
 
     // C_R_UD for product #1
     @Test
@@ -43,21 +73,8 @@ public class ClientProductCRUDTest {
     void testReadProductReturnProduct(){
         // Arrange
         Product product = new Product("product1", 100f, 0.1f, 2);
-
-        given()
-		.contentType("application/json")
-		.body(product)
-		.when()
-        .post("admin_access/products/product1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
-        .body("totalAvailable", equalTo(2));
-
-
+        productRepository.save(product);
+        
         // Act and Assert
         given()
         .contentType("application/json")

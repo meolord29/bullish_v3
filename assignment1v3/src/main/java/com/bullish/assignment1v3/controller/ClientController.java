@@ -60,8 +60,6 @@ public class ClientController {
     }
     
 
-
-
     @GetMapping("/products")
     ResponseEntity<List<Product>> getAllProducts(){
         return clientService.readAllProducts();

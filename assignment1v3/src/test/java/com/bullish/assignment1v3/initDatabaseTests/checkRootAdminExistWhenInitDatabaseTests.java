@@ -33,7 +33,7 @@ public class checkRootAdminExistWhenInitDatabaseTests {
 
         given()
         .when()
-            .get("/admins/RootAdmin")
+            .get("admin_access/admins/RootAdmin")
         .then()
             .statusCode(HttpStatus.OK.value())
             .body("id", is(1))
