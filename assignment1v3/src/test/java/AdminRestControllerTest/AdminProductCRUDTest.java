@@ -13,11 +13,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
 import com.bullish.assignment1v3.model.store.Product;
+import com.bullish.assignment1v3.model.users.Client;
+import com.bullish.assignment1v3.repository.ProductRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+
+import java.util.Arrays;
 
 @SpringBootTest(classes = Assignment1v3Application.class)
 @AutoConfigureMockMvc
@@ -26,6 +30,9 @@ public class AdminProductCRUDTest {
 
     @Autowired
     private AdminController adminController;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @BeforeEach
     public void setup() {
@@ -114,6 +121,42 @@ public class AdminProductCRUDTest {
         .body("price", equalTo(100f))
         .body("discount", equalTo(0.1f))
         .body("totalAvailable", equalTo(2));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void testAdd2ProductsReturnProductList(){
+        // Arrange
+        Product product1 = new Product("product1", 100f, 0.1f, 2);
+        Product product2 = new Product("product2", 100f, 0.1f, 2);
+        productRepository.save(product1);
+        productRepository.save(product2);
+        
+        // Act and Assert
+        // Retrieve a list of products (assuming your endpoint returns a list)
+        given()
+        .contentType("application/json")
+        .when()
+        .get("admin_access/products")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .extract()
+        .jsonPath()
+        .getList(".", Product.class);
+
+        // Assert that the returned list contains both product1 and product2
+        given()
+        .contentType("application/json")
+        .when()
+        .get("admin_access/products")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(Arrays.asList(1, 2)))
+        .body("name", equalTo(Arrays.asList("product1", "product2")))
+        .body("price", equalTo(Arrays.asList(100f, 100f)))
+        .body("discount", equalTo(Arrays.asList(0.1f, 0.1f)))
+        .body("totalAvailable", equalTo(Arrays.asList(2, 2)));
 
     }
 

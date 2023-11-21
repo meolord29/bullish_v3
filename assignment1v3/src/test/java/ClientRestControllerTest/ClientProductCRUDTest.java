@@ -4,6 +4,9 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +35,6 @@ public class ClientProductCRUDTest {
     @Autowired
     private ClientController clientController;
 
-    // @Autowired
-    // private AdminController adminController;
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -42,32 +42,8 @@ public class ClientProductCRUDTest {
     @BeforeEach
     public void setup() {
         RestAssuredMockMvc.standaloneSetup(clientController);
-        //RestAssuredMockMvc.standaloneSetup(adminController);
     }
 
-    //private MockMvc mockMvc1;
-    //private MockMvc mockMvc2;
-
-    // @BeforeEach
-    // public void setup() {
-    //     mockMvc1 = MockMvcBuilders.standaloneSetup(clientController).build();
-    //     mockMvc2 = MockMvcBuilders.standaloneSetup(adminController).build();
-
-    //     RestAssuredMockMvc.mockMvc(mockMvc1);
-
-    //     RestAssuredMockMvc.mockMvc(mockMvc2);
-    // }
-
-    
-
-    //@BeforeEach
-    //public void setup() {
-    //    Controller controller1 = new controller();
-    //
-    //
-    //}
-
-    // C_R_UD for product #1
     @Test
     @DirtiesContext
     void testReadProductReturnProduct(){
@@ -89,6 +65,43 @@ public class ClientProductCRUDTest {
         .body("totalAvailable", equalTo(2));
 
         }
+
+    @Test
+    @DirtiesContext
+    void testReadProductsReturnProducts(){
+        // Arrange
+        Product product1 = new Product("product1", 100f, 0.1f, 2);
+        Product product2 = new Product("product2", 100f, 0.1f, 2);
+        productRepository.save(product1);
+        productRepository.save(product2);
+        
+        // Act and Assert
+        // Retrieve a list of products (assuming your endpoint returns a list)
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/products")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .extract()
+        .jsonPath()
+        .getList(".", Product.class);
+
+        // Assert that the returned list contains both product1 and product2
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/products")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(Arrays.asList(1, 2)))
+        .body("name", equalTo(Arrays.asList("product1", "product2")))
+        .body("price", equalTo(Arrays.asList(100f, 100f)))
+        .body("discount", equalTo(Arrays.asList(0.1f, 0.1f)))
+        .body("totalAvailable", equalTo(Arrays.asList(2, 2)));
+        }
+
+        
 
     // C_R_UD for product #2
     @Test
