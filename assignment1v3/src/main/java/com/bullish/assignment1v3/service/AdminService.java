@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -50,52 +52,104 @@ AdminReadable{
 
     @Override
     @Transactional
-    public void updateProduct(String name, Product productUpdated) {
+    public ResponseEntity<Product> updateProduct(String name, Product productUpdated) {
 
         ModelMapper mapper = new ModelMapper();
-        // this will tell ModelMapper to ignore null fields when mapping the source (newData) to the destination (user)
         mapper.getConfiguration().setSkipNullEnabled(true);
-        
+
         Optional<Product> productOpt = readProduct(name);
 
         if (productOpt.isPresent()){
             Product product = productOpt.get();
             mapper.map(productUpdated, product);
             productRepository.save(product);
+            return new ResponseEntity<>(product, HttpStatus.CREATED);
         }
         else{
-            // NEED TO FILL THIS IN LATER
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
 
     @Override
     public Optional<Product> readProduct(String productName) {
-        return productRepository.findByName(productName);
+        Optional<Product> productOpt = productRepository.findByName(productName);
+
+        return productOpt;
     }
 
     @Override
     @Transactional
-    public void addProduct(Product product) {
-        productRepository.save(product);
+    public ResponseEntity<Product> addProduct(Product product) {
+        Optional<Product> productOpt = readProduct(product.getName());
+
+        if (productOpt.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            productRepository.save(product);
+            return new ResponseEntity<>(product, HttpStatus.CREATED);
+        }
+
         
     }
 
     @Override
-    public Optional<Admin> readAdmin(String username) {
-        return adminRepository.findByUsername(username);
+    public ResponseEntity<Admin> readAdmin(String username) {
+
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
+
+        if (adminOpt.isPresent()) {
+            return new ResponseEntity<>(adminOpt.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
-    public List<Admin> readAllAdmins() {
-        return adminRepository.findAll();
+    public ResponseEntity<List<Admin>> readAllAdmins() {
+
+        List<Admin> admins = adminRepository.findAll();
+
+        if (admins != null && !admins.isEmpty()) {
+            return new ResponseEntity<>(admins, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
     }
 
-    public List<Product> readAllProducts() {
-        return productRepository.findAll();
+    public ResponseEntity<List<Product>> readAllProducts() {
+        List<Product> products = productRepository.findAll();
+
+        if (products != null && !products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public List<Client> readAllClients() {
-        return clientRepository.findAll();
+    public ResponseEntity<Client> readClient(String username) {
+
+        Optional<Client> clientOpt = clientRepository.findByUsername(username);
+
+        if (clientOpt.isPresent()) {
+            return new ResponseEntity<>(clientOpt.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    public ResponseEntity<List<Client>> readAllClients() {
+        List<Client> clients = clientRepository.findAll();
+
+        if (clients != null && !clients.isEmpty()) {
+            return new ResponseEntity<>(clients, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

@@ -1,33 +1,43 @@
 package com.bullish.assignment1v3.initDatabaseTests;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.bullish.assignment1v3.model.users.Admin;
-import com.bullish.assignment1v3.repository.AdminRepository;
-import com.bullish.assignment1v3.service.AdminService;
-
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+
+import com.bullish.assignment1v3.controller.AdminController;
+
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class checkRootAdminExistWhenInitDatabaseTests {
-    
-    @Autowired 
-    private AdminRepository adminRepository;
 
-    @Test   
-    void injectedAdminIntoAdminRepositoryIsNotNull(){
+    @Autowired
+    private AdminController adminController;
 
-        // Assert
-        // Check that admin database is not empty\
-        assertThat(adminRepository).isNotNull(); 
-            
+    @BeforeEach
+    public void setup() {
+        RestAssuredMockMvc.standaloneSetup(adminController);
+    }
 
+    @Test
+    void injectedAdminRetrievableFromAdminRepository(){
+
+        given()
+        .when()
+            .get("/admins/RootAdmin")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(1))
+            .body("username", is("RootAdmin"));
     }
 
 }
