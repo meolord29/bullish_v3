@@ -12,7 +12,6 @@ public class LoadDatabase {
     
     @Bean
     CommandLineRunner initDatabase(AdminRepository adminRepository) {
-
         return args -> {
             adminRepository.save(new Admin("RootAdmin", "password"));
         };

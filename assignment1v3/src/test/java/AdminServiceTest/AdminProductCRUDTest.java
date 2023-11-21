@@ -36,9 +36,6 @@ public class AdminProductCRUDTest {
     @Autowired
     private AdminController adminController;
 
-    @Autowired
-    private AdminService adminService;
-
     @BeforeEach
     public void setup() {
         RestAssuredMockMvc.standaloneSetup(adminController);
@@ -143,13 +140,17 @@ public class AdminProductCRUDTest {
     @Test
     void testUpdateProductReturnProduct(){
 
-        Product product = new Product("product1", 100f, 0.1f, 2);
+        Product productInit = new Product("product1", 100f, 0.1f, 2);
+
+        Product productUpdated = new Product("product1", 130f, 0.5f, 100);
 
         // Arrange
         given()
 		.contentType("application/json")
-		.body(product)
-		.when().post("/products/product").then()
+		.body(productInit)
+		.when()
+        .post("/products/product")
+        .then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
@@ -169,20 +170,21 @@ public class AdminProductCRUDTest {
         .body("discount", equalTo(0.1f))
         .body("totalAvailable", equalTo(2));
 
-        // Act and Assert
+        // Act and Assert - Updating the product
         given()
 		.contentType("application/json")
-		.body(product)
+		.body(productUpdated)
 		.when()
         .put("/products/product")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
+        .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
-        .body("totalAvailable", equalTo(2));
+        .body("price", equalTo(130f))
+        .body("discount", equalTo(0.5f))
+        .body("totalAvailable", equalTo(100));
 
+        // checking that the product was updated by requesting the updated protect and checking it against the expected attributes
         given()
         .contentType("application/json")
         .when()
@@ -191,10 +193,9 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
-        .body("totalAvailable", equalTo(2));
-
+        .body("price", equalTo(130f))
+        .body("discount", equalTo(0.5f))
+        .body("totalAvailable", equalTo(100));
 
     }
 
@@ -202,17 +203,91 @@ public class AdminProductCRUDTest {
     @Test
     void testUpdateProductReturnNoProductExist(){
 
+        // Arrange
+        Product productUpdated = new Product("product1", 130f, 0.5f, 100);
+
+        // Act and Assert - Updating the product
+        given()
+		.contentType("application/json")
+		.body(productUpdated)
+		.when()
+        .put("/products/product")
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value());
+
     }
 
     // CRU_D_ for product #1
     @Test
     void testDeleteProductReturnProduct(){
 
+        Product productInit = new Product("product1", 100f, 0.1f, 2);
+
+        // Arrange
+        given()
+		.contentType("application/json")
+		.body(productInit)
+		.when()
+        .post("/products/product1")
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .body("id", is(1))
+        .body("name", equalTo("product1"))
+        .body("price", equalTo(100f))
+        .body("discount", equalTo(0.1f))
+        .body("totalAvailable", equalTo(2));
+
+        given()
+        .contentType("application/json")
+        .when()
+        .get("/products/product1")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(1))
+        .body("name", equalTo("product1"))
+        .body("price", equalTo(100f))
+        .body("discount", equalTo(0.1f))
+        .body("totalAvailable", equalTo(2));
+
+        // Act and Assert - Updating the product
+        given()
+		.contentType("application/json")
+		.body(productInit)
+		.when()
+        .delete("/products/product1")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(1))
+        .body("name", equalTo("product1"))
+        .body("price", equalTo(100f))
+        .body("discount", equalTo(0.1f))
+        .body("totalAvailable", equalTo(2));
+
+        // checking that the product was updated by requesting the updated protect and checking it against the expected attributes
+        given()
+        .contentType("application/json")
+        .when()
+        .get("/products/product1")
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value());
+
     }
 
     // CRU_D_ for product #2
     @Test
     void testDeleteProductReturnNoProductExist(){
+
+        // Arrange
+        Product productInit = new Product("product1", 100f, 0.1f, 2);
+
+        // Act and Assert - Updating the product
+        given()
+		.contentType("application/json")
+		.body(productInit)
+		.when()
+        .delete("/products/product1")
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value());
 
     }
 }

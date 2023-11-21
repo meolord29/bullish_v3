@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,7 @@ import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.service.AdminService;
-
-import jakarta.persistence.EntityExistsException;
+import com.bullish.assignment1v3.service.ClientService;
 
 @RestController
 public class AdminController {
@@ -35,14 +35,36 @@ public class AdminController {
 
     // Admin related operations
     @GetMapping("/admins")
-    ResponseEntity<List<Admin>> getAllAdmin(){
+    ResponseEntity<List<Admin>> getAllAdmins(){
         return adminService.readAllAdmins();
     }
 
-    @GetMapping("/admins/{username}")
-    ResponseEntity<Admin> getAdmin(@PathVariable String username) {
-        return adminService.readAdmin(username);
+    @GetMapping("/admins/{name}")
+    ResponseEntity<Admin> getAdmin(@PathVariable String username){
+        Optional<Admin> productOpt = adminService.readAdmin(username);
+
+        if (productOpt.isPresent()) {
+            return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
+
+    @PostMapping("/admins/{admin}")
+    ResponseEntity<Admin> createadmin(@RequestBody Admin admin){
+        return adminService.addAdmin(admin);
+    }
+
+    @PutMapping("/admins/{admin}")
+    ResponseEntity<Admin> updateAdmin(@RequestBody Admin updatedAdmin){
+        return adminService.updateAdmin(updatedAdmin);
+    }
+    @DeleteMapping("/admins/{admin}")
+    ResponseEntity<Admin> removeAdmin(@RequestBody Admin admin){
+        return adminService.deleteAdmin(admin);
+    }
+
+
 
     // Client related operations
     @GetMapping("/clients")
@@ -50,10 +72,32 @@ public class AdminController {
         return adminService.readAllClients();
     }
 
-    @GetMapping("/clients/{username}")
-    ResponseEntity<Client> getClient(@PathVariable String username) {
-        return adminService.readClient(username);
+    @GetMapping("/clients/{name}")
+    ResponseEntity<Client> getClient(@PathVariable String username){
+        Optional<Client> clientOPt = adminService.readClient(username);
+
+        if (clientOPt.isPresent()) {
+            return new ResponseEntity<>(clientOPt.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
+
+    //@PostMapping("/clients/{client}}")
+    //ResponseEntity<Client> createClient(@RequestBody Client client){
+     //   return adminService.addClient(client);
+    //}
+
+    //@PutMapping("/clients/{client}}")
+    //ResponseEntity<Client> updateClient(@RequestBody Client client){
+     //   return adminService.updateClient(client);
+    //}
+
+
+    //@DeleteMapping("/clients/{client}}")
+    //ResponseEntity<Client> removeClient(@RequestBody Client client){
+     //   return adminService.deleteClient(client);
+    //}
 
 
     // Product related operations
@@ -80,8 +124,11 @@ public class AdminController {
 
     @PutMapping("/products/{product}")
     ResponseEntity<Product> updateProduct(@RequestBody Product product){
-        return adminService.updateProduct(product.getName(), product);
+        return adminService.updateProduct(product);
     }
-
+    @DeleteMapping("/products/{product}")
+    ResponseEntity<Product> removeProduct(@RequestBody Product product){
+        return adminService.deleteProduct(product);
+    }
 
 }

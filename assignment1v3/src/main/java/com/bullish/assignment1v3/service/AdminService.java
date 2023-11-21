@@ -16,10 +16,13 @@ import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.AdminRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
+import com.bullish.assignment1v3.service.contracts.AdminAddable;
 import com.bullish.assignment1v3.service.contracts.AdminReadable;
+import com.bullish.assignment1v3.service.contracts.AdminUpdatable;
+import com.bullish.assignment1v3.service.contracts.AdminsReadable;
 import com.bullish.assignment1v3.service.contracts.ProductAddableService;
 import com.bullish.assignment1v3.service.contracts.ProductReadableService;
-import com.bullish.assignment1v3.service.contracts.ProductRemovableService;
+import com.bullish.assignment1v3.service.contracts.ProductDeletableService;
 import com.bullish.assignment1v3.service.contracts.ProductUpdatableService;
 
 import jakarta.persistence.EntityExistsException;
@@ -29,8 +32,8 @@ import jakarta.transaction.Transactional;
 
 
 @Service
-public class AdminService implements ProductAddableService, ProductReadableService, ProductUpdatableService, ProductRemovableService,
-AdminReadable{
+public class AdminService implements ProductAddableService, ProductReadableService, ProductUpdatableService, ProductDeletableService,
+AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
 
     @Autowired
     private AdminRepository adminRepository;
@@ -43,39 +46,41 @@ AdminReadable{
 
     // CRUD METHODS - Admin is able to do all of the CRUD methods within the system
 
+    // PRODUCT CRUD SERVICES
     @Override
     @Transactional
-    public void removeProduct(ProductRepository productRepository) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeProduct'");
-    }
-
-    @Override
-    @Transactional
-    public ResponseEntity<Product> updateProduct(String name, Product productUpdated) {
+    public ResponseEntity<Product> updateProduct(Product productUpdated) {
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
 
-        Optional<Product> productOpt = readProduct(name);
+        Optional<Product> productOpt = readProduct(productUpdated.getName());
 
         if (productOpt.isPresent()){
             Product product = productOpt.get();
             mapper.map(productUpdated, product);
             productRepository.save(product);
-            return new ResponseEntity<>(product, HttpStatus.CREATED);
+            return new ResponseEntity<>(product, HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @Override
     public Optional<Product> readProduct(String productName) {
         Optional<Product> productOpt = productRepository.findByName(productName);
-
         return productOpt;
+    }
+
+    public ResponseEntity<List<Product>> readAllProducts() {
+        List<Product> products = productRepository.findAll();
+
+        if (products != null && !products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
@@ -89,26 +94,31 @@ AdminReadable{
             productRepository.save(product);
             return new ResponseEntity<>(product, HttpStatus.CREATED);
         }
-
-        
     }
 
-    @Override
-    public ResponseEntity<Admin> readAdmin(String username) {
+    public ResponseEntity<Product> deleteProduct(Product product) {
+        Optional<Product> productOpt = readProduct(product.getName());
 
-        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
-
-        if (adminOpt.isPresent()) {
-            return new ResponseEntity<>(adminOpt.get(), HttpStatus.OK);
+        if (productOpt.isPresent()) {
+            productRepository.delete(productOpt.get());
+            return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
+            
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
 
 
+
+    // ADMIN CRUD SERVICES
+    @Override
+    public Optional<Admin> readAdmin(String username) {
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
+
+        return adminOpt;
     }
 
     public ResponseEntity<List<Admin>> readAllAdmins() {
-
         List<Admin> admins = adminRepository.findAll();
 
         if (admins != null && !admins.isEmpty()) {
@@ -116,29 +126,58 @@ AdminReadable{
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-
     }
 
-    public ResponseEntity<List<Product>> readAllProducts() {
-        List<Product> products = productRepository.findAll();
+    @Override
+    @Transactional
+    public ResponseEntity<Admin> addAdmin(Admin admin) {
+        Optional<Admin> adminOpt = readAdmin(admin.getUsername());
 
-        if (products != null && !products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.OK);
+        if (adminOpt.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            adminRepository.save(admin);
+            return new ResponseEntity<>(admin, HttpStatus.CREATED);
         }
     }
 
-    public ResponseEntity<Client> readClient(String username) {
+    public ResponseEntity<Admin> deleteAdmin(Admin admin) {
+        Optional<Admin> adminOpt = readAdmin(admin.getUsername());
 
-        Optional<Client> clientOpt = clientRepository.findByUsername(username);
-
-        if (clientOpt.isPresent()) {
-            return new ResponseEntity<>(clientOpt.get(), HttpStatus.OK);
+        if (adminOpt.isPresent() && adminOpt.get().getUsername() != "RootAdmin") {
+            adminRepository.delete(adminOpt.get());
+            return new ResponseEntity<>(adminOpt.get(), HttpStatus.OK);
+            
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Admin> updateAdmin(Admin adminUpdated) {
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setSkipNullEnabled(true);
+
+        Optional<Admin> adminOpt = readAdmin(adminUpdated.getUsername());
+
+        if (adminOpt.isPresent()){
+            Admin admin = adminOpt.get();
+            mapper.map(adminUpdated, admin);
+            adminRepository.save(admin);
+            return new ResponseEntity<>(admin, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public Optional<Client> readClient(String username) {
+
+        Optional<Client> clientOpt = clientRepository.findByUsername(username);
+
+        return clientOpt;
 
     }
 
@@ -151,6 +190,8 @@ AdminReadable{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    
 
 
 
