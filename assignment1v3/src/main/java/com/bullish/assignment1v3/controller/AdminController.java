@@ -24,6 +24,7 @@ import com.bullish.assignment1v3.service.AdminService;
 import com.bullish.assignment1v3.service.ClientService;
 
 @RestController
+@RequestMapping("/admin_access")
 public class AdminController {
 
     @Autowired
@@ -39,19 +40,19 @@ public class AdminController {
         return adminService.readAllAdmins();
     }
 
-    @GetMapping("/admins/{name}")
+    @GetMapping("/admins/{username}")
     ResponseEntity<Admin> getAdmin(@PathVariable String username){
-        Optional<Admin> productOpt = adminService.readAdmin(username);
+        Optional<Admin> adminOpt = adminService.readAdmin(username);
 
-        if (productOpt.isPresent()) {
-            return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
+        if (adminOpt.isPresent()) {
+            return new ResponseEntity<>(adminOpt.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/admins/{admin}")
-    ResponseEntity<Admin> createadmin(@RequestBody Admin admin){
+    ResponseEntity<Admin> createAdmin(@RequestBody Admin admin){
         return adminService.addAdmin(admin);
     }
 
@@ -113,7 +114,7 @@ public class AdminController {
         if (productOpt.isPresent()) {
             return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

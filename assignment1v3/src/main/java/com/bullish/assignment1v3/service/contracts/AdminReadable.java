@@ -8,6 +8,6 @@ import com.bullish.assignment1v3.model.users.Admin;
 
 public interface AdminReadable {
 
-    public ResponseEntity<Admin> readAdmin(String username);
+    public Optional<Admin> readAdmin(String username);
 
 }

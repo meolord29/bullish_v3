@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = Assignment1v3Application.class)
 @AutoConfigureMockMvc
+@DirtiesContext
 public class AdminProductCRUDTest {
 
     @Autowired
@@ -43,6 +45,7 @@ public class AdminProductCRUDTest {
 
     // _C_RUD for product #1
     @Test
+    @DirtiesContext
     void testAddProductReturnProduct(){
         //Arrange
         Product product = new Product("product1", 100f, 0.1f, 2);
@@ -50,7 +53,7 @@ public class AdminProductCRUDTest {
 		given()
 		.contentType("application/json")
 		.body(product)
-		.when().post("/products/product").then()
+		.when().post("admin_access/products/product").then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
@@ -62,6 +65,7 @@ public class AdminProductCRUDTest {
 
     // _C_RUD for product #2
     @Test
+    @DirtiesContext
     void testAddProductReturnProductAlreadyExist(){
 
         // Arrange
@@ -70,7 +74,7 @@ public class AdminProductCRUDTest {
         given()
 		.contentType("application/json")
 		.body(product)
-		.when().post("/products/product").then()
+		.when().post("admin_access/products/product").then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
@@ -83,7 +87,7 @@ public class AdminProductCRUDTest {
             .contentType("application/json")
             .body(product)
         .when()
-            .post("/products/product")
+            .post("admin_access/products/product")
         .then()
             .statusCode(HttpStatus.BAD_REQUEST.value());
 
@@ -91,6 +95,7 @@ public class AdminProductCRUDTest {
 
     // C_R_UD for product #1
     @Test
+    @DirtiesContext
     void testReadProductReturnProduct(){
         // Arrange
         Product product = new Product("product1", 100f, 0.1f, 2);
@@ -98,7 +103,7 @@ public class AdminProductCRUDTest {
         given()
 		.contentType("application/json")
 		.body(product)
-		.when().post("/products/product").then()
+		.when().post("admin_access/products/product").then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
@@ -111,7 +116,7 @@ public class AdminProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -124,13 +129,14 @@ public class AdminProductCRUDTest {
 
     // C_R_UD for product #2
     @Test
+    @DirtiesContext
     void testReadProductReturnNoProductExist(){
 
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
 
@@ -138,6 +144,7 @@ public class AdminProductCRUDTest {
 
     // CR_U_D for product #1
     @Test
+    @DirtiesContext
     void testUpdateProductReturnProduct(){
 
         Product productInit = new Product("product1", 100f, 0.1f, 2);
@@ -201,6 +208,7 @@ public class AdminProductCRUDTest {
 
     // CR_U_D for product #2
     @Test
+    @DirtiesContext
     void testUpdateProductReturnNoProductExist(){
 
         // Arrange
@@ -211,7 +219,7 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productUpdated)
 		.when()
-        .put("/products/product")
+        .put("admin_access/products/product")
         .then()
         .statusCode(HttpStatus.BAD_REQUEST.value());
 
@@ -219,6 +227,7 @@ public class AdminProductCRUDTest {
 
     // CRU_D_ for product #1
     @Test
+    @DirtiesContext
     void testDeleteProductReturnProduct(){
 
         Product productInit = new Product("product1", 100f, 0.1f, 2);
@@ -228,7 +237,7 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productInit)
 		.when()
-        .post("/products/product1")
+        .post("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
@@ -240,7 +249,7 @@ public class AdminProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -254,7 +263,7 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productInit)
 		.when()
-        .delete("/products/product1")
+        .delete("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
@@ -267,7 +276,7 @@ public class AdminProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/products/product1")
+        .get("admin_access/products/product1")
         .then()
         .statusCode(HttpStatus.BAD_REQUEST.value());
 
@@ -275,6 +284,7 @@ public class AdminProductCRUDTest {
 
     // CRU_D_ for product #2
     @Test
+    @DirtiesContext
     void testDeleteProductReturnNoProductExist(){
 
         // Arrange
@@ -285,9 +295,9 @@ public class AdminProductCRUDTest {
 		.contentType("application/json")
 		.body(productInit)
 		.when()
-        .delete("/products/product1")
+        .delete("admin_access/products/product1")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 }

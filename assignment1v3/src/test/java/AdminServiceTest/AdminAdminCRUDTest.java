@@ -7,14 +7,21 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 
+import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
+@SpringBootTest(classes = Assignment1v3Application.class)
+@AutoConfigureMockMvc
+@DirtiesContext
 public class AdminAdminCRUDTest {
     
     @Autowired
@@ -27,6 +34,7 @@ public class AdminAdminCRUDTest {
 
     // _C_RUD for Admin #1
     @Test
+    @DirtiesContext
     void testAddAdminReturnAdmin(){
         // Arrange
         Admin admin = new Admin("admin1", "password123");
@@ -34,9 +42,9 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .body(admin)
-        .when().post("/admins/admin").then()
+        .when().post("admin_access/admins/admin").then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -44,6 +52,7 @@ public class AdminAdminCRUDTest {
 
     // _C_RUD for Admin #2
     @Test
+    @DirtiesContext
     void testAddAdminReturnAdminAlreadyExist(){
 
         // Arrange
@@ -52,9 +61,9 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .body(admin)
-        .when().post("/admins/admin").then()
+        .when().post("admin_access/admins/admin").then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -63,7 +72,7 @@ public class AdminAdminCRUDTest {
             .contentType("application/json")
             .body(admin)
         .when()
-            .post("/admins/admin")
+            .post("admin_access/admins/admin")
         .then()
             .statusCode(HttpStatus.BAD_REQUEST.value());
 
@@ -71,6 +80,7 @@ public class AdminAdminCRUDTest {
 
     // C_R_UD for Admin #1
     @Test
+    @DirtiesContext
     void testReadAdminReturnAdmin(){
         // Arrange
         Admin admin = new Admin("admin1", "password123");
@@ -78,9 +88,11 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .body(admin)
-        .when().post("/admins/admin").then()
+        .when()
+        .post("admin_access/admins/admin1")
+        .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -88,10 +100,10 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -99,13 +111,14 @@ public class AdminAdminCRUDTest {
 
     // C_R_UD for Admin #2
     @Test
+    @DirtiesContext
     void testReadAdminReturnNoAdminExist(){
 
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
 
@@ -113,6 +126,7 @@ public class AdminAdminCRUDTest {
 
     // CR_U_D for Admin #1
     @Test
+    @DirtiesContext
     void testUpdateAdminReturnAdmin(){
 
         Admin adminInit = new Admin("admin1", "password123");
@@ -124,20 +138,20 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminInit)
         .when()
-        .post("/admins/admin")
+        .post("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -146,10 +160,10 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminUpdated)
         .when()
-        .put("/admins/admin")
+        .put("admin_access/admins/admin")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("newPassword456"));
 
@@ -157,10 +171,10 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("newPassword456"));
 
@@ -168,6 +182,7 @@ public class AdminAdminCRUDTest {
 
     // CR_U_D for Admin #2
     @Test
+    @DirtiesContext
     void testUpdateAdminReturnNoAdminExist(){
 
         // Arrange
@@ -178,14 +193,15 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminUpdated)
         .when()
-        .put("/admins/admin")
+        .put("admin_access/admins/admin")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 
     // CRU_D_ for Admin #1
     @Test
+    @DirtiesContext
     void testDeleteAdminReturnAdmin(){
 
         Admin adminInit = new Admin("admin1", "password123");
@@ -195,20 +211,20 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminInit)
         .when()
-        .post("/admins/admin1")
+        .post("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -217,10 +233,10 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminInit)
         .when()
-        .delete("/admins/admin1")
+        .delete("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
+        .body("id", is(2))
         .body("username", equalTo("admin1"))
         .body("password", equalTo("password123"));
 
@@ -228,15 +244,16 @@ public class AdminAdminCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("/admins/admin1")
+        .get("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 
     // CRU_D_ for Admin #2
     @Test
-    void testDeleteAdminReturnNoAdminExist(){
+    @DirtiesContext
+    void testDeleteAdminReturnBadRequest(){
         // Arrange
         Admin adminInit = new Admin("admin1", "password123");
 
@@ -245,7 +262,24 @@ public class AdminAdminCRUDTest {
         .contentType("application/json")
         .body(adminInit)
         .when()
-        .delete("/admins/admin1")
+        .delete("admin_access/admins/admin1")
+        .then()
+        .statusCode(HttpStatus.BAD_REQUEST.value());
+
+    }
+
+    @Test
+    @DirtiesContext
+    void testDeleteRootAdminReturnBadRequest(){
+        // Arrange
+        Admin adminInit = new Admin("RootAdmin", "password");
+
+        // Act and Assert - Updating the admin
+        given()
+        .contentType("application/json")
+        .body(adminInit)
+        .when()
+        .delete("admin_access/admins/admin1")
         .then()
         .statusCode(HttpStatus.BAD_REQUEST.value());
 

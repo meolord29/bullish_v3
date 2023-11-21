@@ -104,7 +104,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
             return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
             
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -169,7 +169,7 @@ AdminReadable, AdminAddable, AdminUpdatable, AdminsReadable{
             return new ResponseEntity<>(admin, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
