@@ -13,7 +13,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
 import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.ProductRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;

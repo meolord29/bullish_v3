@@ -16,9 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.AdminController;
-import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
-import com.bullish.assignment1v3.repository.AdminRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
@@ -29,9 +27,6 @@ public class AdminAdminCRUDTest {
     
     @Autowired
     private AdminController adminController;
-
-    @Autowired
-    private AdminRepository adminRepository;
 
     @BeforeEach
     public void setup() {
