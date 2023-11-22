@@ -2,8 +2,6 @@ package com.bullish.assignment1v3.service.contracts.product;
 
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
-
 import com.bullish.assignment1v3.model.store.Product;
 
 public interface ProductReadableService { // CRUD - Read

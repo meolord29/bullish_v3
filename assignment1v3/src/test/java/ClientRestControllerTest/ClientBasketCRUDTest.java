@@ -18,9 +18,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.ClientController;
 import com.bullish.assignment1v3.model.store.Basket;
-import com.bullish.assignment1v3.repository.BasketRepository;
-import com.bullish.assignment1v3.repository.ClientRepository;
-import com.bullish.assignment1v3.repository.ProductRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
@@ -31,15 +28,6 @@ public class ClientBasketCRUDTest {
 
     @Autowired
     private ClientController clientController;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private BasketRepository basketRepository;
 
     @BeforeEach
     public void setup() {

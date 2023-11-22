@@ -1,14 +1,11 @@
 package com.bullish.assignment1v3.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -101,31 +98,9 @@ public class ClientController {
         return clientService.removeFromBasket(basket);
     }
 
-
-//     // Helper methods to map values from the requestMap to Client and Product
-// private Client mapToClient(Map<String, Object> requestMap) {
-//     Client client = new Client();
-//     if (requestMap.containsKey("client")) {
-//         Map<String, Object> clientMap = (Map<String, Object>) requestMap.get("client");
-//         // Assuming Client has setters for the properties
-//         client.setUsername((String) clientMap.get("username"));
-//         client.setPassword((String) clientMap.get("password"));
-//         // Add other properties as needed
-//     }
-//     return client;
-// }
-
-// private Product mapToProduct(Map<String, Object> requestMap) {
-//     Product product = new Product();
-//     if (requestMap.containsKey("product")) {
-//         Map<String, Object> productMap = (Map<String, Object>) requestMap.get("product");
-//         // Assuming Product has setters for the properties
-//         product.setName((String) productMap.get("name"));
-//         Integer number = (Integer) productMap.get("total");
-        
-//         product.setTotal(number);
-//     }
-//     return product;
-// }
+    @GetMapping("/basket/{username}/priceTotal")
+    ResponseEntity<Double> getTotalPrice(@RequestBody String username){
+        return clientService.getTotalPrice(username);
+    }
 
 }

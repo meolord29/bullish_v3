@@ -10,14 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
-import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketAllReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
 
 import jakarta.transaction.Transactional;
 
@@ -121,7 +118,7 @@ BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, Ba
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    public ResponseEntity<Double> calculateTotalPrice(String username){
+    public ResponseEntity<Double> getTotalPrice(String username){
         return new ResponseEntity<>(basketCalculateService.calculateBasketSum(readBasketAll(username).getBody()), HttpStatus.OK);
     }
     

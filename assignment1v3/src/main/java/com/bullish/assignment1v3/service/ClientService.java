@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
-import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 import com.bullish.assignment1v3.service.contracts.client.ClientAddableService;
@@ -41,9 +40,6 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
 
     @Autowired
 	private BasketService basketService;
-
-    @Autowired 
-    private ConfirmedPurchaseRepository confirmedPurchaseRepository;
 
 
     // CLIENT CRUD SERVICES
@@ -78,7 +74,7 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         Optional<Client> clientOpt = readClient(client.getUsername());
 
         if (clientOpt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             clientRepository.save(client);
             return new ResponseEntity<>(client, HttpStatus.CREATED);
@@ -138,12 +134,16 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         return basketService.readBasketAll(clientUsername);
     }
 
+    public ResponseEntity<Double> getTotalPrice(String clientUsername){
+        return basketService.getTotalPrice(clientUsername);
+    }
 
     public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) { 
         // C_R_UD for Basket Table
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readConfirmedPurchase'");
     }
+
 
     public void addConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) {
         // _C_RUD for Basket Table

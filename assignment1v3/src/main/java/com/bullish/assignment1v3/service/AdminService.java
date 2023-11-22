@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.AdminRepository;
-import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
 import com.bullish.assignment1v3.service.contracts.admin.AdminAddableService;
 import com.bullish.assignment1v3.service.contracts.admin.AdminDeletableService;

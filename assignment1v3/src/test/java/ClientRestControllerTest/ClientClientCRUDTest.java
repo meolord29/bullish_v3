@@ -37,16 +37,16 @@ public class ClientClientCRUDTest {
     @DirtiesContext
     void testAddClientReturnClient() {
         // Arrange
-        Client client = new Client("client1", "password123");
+        Client client = new Client("client7", "password123");
 
         given()
         .contentType("application/json")
         .body(client)
-        .when().post("client_access/clients/client")
+        .when().post("client_access/clients/client7")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client7"))
         .body("password", equalTo("password123"));
     }
 
@@ -56,25 +56,25 @@ public class ClientClientCRUDTest {
     void testAddClientReturnClientAlreadyExist() {
 
         // Arrange
-        Client client = new Client("client1", "password123");
+        Client client = new Client("client7", "password123");
 
         given()
         .contentType("application/json")
         .body(client)
-        .when().post("client_access/clients/client").then()
+        .when().post("client_access/clients/client7").then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client7"))
         .body("password", equalTo("password123"));
 
         // Act and Assert
         given()
-            .contentType("application/json")
-            .body(client)
+        .contentType("application/json")
+        .body(client)
         .when()
-            .post("client_access/clients/client")
+        .post("client_access/clients/client7")
         .then()
-            .statusCode(HttpStatus.NOT_FOUND.value());
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     // C_R_UD for Client #1
