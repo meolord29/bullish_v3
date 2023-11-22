@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
@@ -13,9 +14,9 @@ import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
-
 import jakarta.transaction.Transactional;
 
+@Service
 public class BasketService implements
 BasketReadableService, RemovableFromBasketService, AddableToBasketService{
 

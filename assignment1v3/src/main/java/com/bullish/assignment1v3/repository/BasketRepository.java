@@ -11,4 +11,8 @@ import com.bullish.assignment1v3.model.store.Basket;
 public interface BasketRepository extends JpaRepository<Basket,Long>{
 	
 	Optional<Basket> findByUsername(String username);
+
+    Optional<Basket> findByUsernameAndProductName(String clientUsername, String productName);
+
+    
 }

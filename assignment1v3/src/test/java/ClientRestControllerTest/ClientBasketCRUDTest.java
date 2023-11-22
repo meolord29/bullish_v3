@@ -60,7 +60,7 @@ public class ClientBasketCRUDTest {
         .contentType("application/json")
         .body(Map.of("client", client1, "product", product1))  // Assuming addToBasket expects an object with 'client' and 'product' properties
         .when()
-        .post("/basket")
+        .post("client_access/basket")
         .then()
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))

@@ -134,11 +134,9 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         return basketService.removeFromBasket(client, product);
     }
 
-
     public Optional<Basket> readBasket(String clientUsername) { // C_R_UD for Basket Table
         return basketService.readBasket(clientUsername);
     }
-
 
     public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) { 
         // C_R_UD for Basket Table
