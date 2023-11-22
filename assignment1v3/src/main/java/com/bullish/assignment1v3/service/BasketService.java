@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class BasketService implements
 BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, BasketReadableService{
 
     private BasketRepository basketRepository;
+
+    @Autowired
+    private BasketCalculateService basketCalculateService;
 
     public BasketService(BasketRepository basketRepository) {
         this.basketRepository = basketRepository;
@@ -116,6 +120,9 @@ BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, Ba
         else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    public ResponseEntity<Double> calculateTotalPrice(String username){
+        return new ResponseEntity<>(basketCalculateService.calculateBasketSum(readBasketAll(username).getBody()), HttpStatus.OK);
     }
     
 }
