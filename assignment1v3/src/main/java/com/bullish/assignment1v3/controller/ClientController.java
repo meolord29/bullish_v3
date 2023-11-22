@@ -1,6 +1,8 @@
 package com.bullish.assignment1v3.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +94,10 @@ public class ClientController {
     }
 
     @PostMapping("/basket")
-    ResponseEntity<Basket> addToBasket(@RequestBody Client client, @RequestBody Product product){
+    ResponseEntity<Basket> addToBasket(@RequestBody HashMap<String, Object> requestMap){
+        Client client  = mapToClient(requestMap);
+        Product product  = mapToProduct(requestMap);
+
         return clientService.addToBasket(client, product);
     }
 
@@ -105,5 +110,33 @@ public class ClientController {
     ResponseEntity<Basket> removeFromBasket(@RequestBody Client client, @RequestBody Product product){
         return clientService.removeFromBasket(client, product);
     }
+
+
+    // Helper methods to map values from the requestMap to Client and Product
+private Client mapToClient(Map<String, Object> requestMap) {
+    Client client = new Client();
+    if (requestMap.containsKey("client")) {
+        Map<String, Object> clientMap = (Map<String, Object>) requestMap.get("client");
+        // Assuming Client has setters for the properties
+        client.setUsername((String) clientMap.get("username"));
+        client.setPassword((String) clientMap.get("password"));
+        // Add other properties as needed
+    }
+    return client;
+}
+
+private Product mapToProduct(Map<String, Object> requestMap) {
+    Product product = new Product();
+    if (requestMap.containsKey("product")) {
+        Map<String, Object> productMap = (Map<String, Object>) requestMap.get("product");
+        // Assuming Product has setters for the properties
+        product.setName((String) productMap.get("name"));
+        float number = (Integer) productMap.get("price");
+        
+        product.setPrice(number);
+        // Add other properties as needed
+    }
+    return product;
+}
 
 }
