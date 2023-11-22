@@ -81,62 +81,51 @@ public class ClientController {
 
 
     // All to do with basket
-    @GetMapping("/basket/{username}")
-    ResponseEntity<Basket> getBasket(@PathVariable String username){
-        Optional<Basket> basketOpt = clientService.readBasket(username);
-
-        if (basketOpt.isPresent()) {
-            return new ResponseEntity<>(basketOpt.get(), HttpStatus.OK);
-        } 
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/basket/{username}/all")
+    ResponseEntity<List<Basket>> getBasket(@PathVariable String username){
+        return clientService.getBasket(username);
     }
 
     @PostMapping("/basket")
-    ResponseEntity<Basket> addToBasket(@RequestBody HashMap<String, Object> requestMap){
-        Client client  = mapToClient(requestMap);
-        Product product  = mapToProduct(requestMap);
-
-        return clientService.addToBasket(client, product);
+    ResponseEntity<Basket> addToBasket(@RequestBody Basket basket){
+        return clientService.addToBasket(basket);
     }
 
     @PutMapping("/basket")
-    ResponseEntity<Basket> updateBasket(@RequestBody Client client, @RequestBody Product product){
-        return clientService.updateBasket(client, product);
+    ResponseEntity<Basket> updateBasket(@RequestBody Basket basket){
+        return clientService.updateBasket(basket);
     }
 
     @DeleteMapping("/basket")
-    ResponseEntity<Basket> removeFromBasket(@RequestBody Client client, @RequestBody Product product){
-        return clientService.removeFromBasket(client, product);
+    ResponseEntity<Basket> removeFromBasket(@RequestBody Basket basket){
+        return clientService.removeFromBasket(basket);
     }
 
 
-    // Helper methods to map values from the requestMap to Client and Product
-private Client mapToClient(Map<String, Object> requestMap) {
-    Client client = new Client();
-    if (requestMap.containsKey("client")) {
-        Map<String, Object> clientMap = (Map<String, Object>) requestMap.get("client");
-        // Assuming Client has setters for the properties
-        client.setUsername((String) clientMap.get("username"));
-        client.setPassword((String) clientMap.get("password"));
-        // Add other properties as needed
-    }
-    return client;
-}
+//     // Helper methods to map values from the requestMap to Client and Product
+// private Client mapToClient(Map<String, Object> requestMap) {
+//     Client client = new Client();
+//     if (requestMap.containsKey("client")) {
+//         Map<String, Object> clientMap = (Map<String, Object>) requestMap.get("client");
+//         // Assuming Client has setters for the properties
+//         client.setUsername((String) clientMap.get("username"));
+//         client.setPassword((String) clientMap.get("password"));
+//         // Add other properties as needed
+//     }
+//     return client;
+// }
 
-private Product mapToProduct(Map<String, Object> requestMap) {
-    Product product = new Product();
-    if (requestMap.containsKey("product")) {
-        Map<String, Object> productMap = (Map<String, Object>) requestMap.get("product");
-        // Assuming Product has setters for the properties
-        product.setName((String) productMap.get("name"));
-        float number = (Integer) productMap.get("price");
+// private Product mapToProduct(Map<String, Object> requestMap) {
+//     Product product = new Product();
+//     if (requestMap.containsKey("product")) {
+//         Map<String, Object> productMap = (Map<String, Object>) requestMap.get("product");
+//         // Assuming Product has setters for the properties
+//         product.setName((String) productMap.get("name"));
+//         Integer number = (Integer) productMap.get("total");
         
-        product.setPrice(number);
-        // Add other properties as needed
-    }
-    return product;
-}
+//         product.setTotal(number);
+//     }
+//     return product;
+// }
 
 }

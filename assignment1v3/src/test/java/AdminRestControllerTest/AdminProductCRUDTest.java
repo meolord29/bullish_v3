@@ -43,7 +43,7 @@ public class AdminProductCRUDTest {
     @DirtiesContext
     void testAddProductReturnProduct(){
         //Arrange
-        Product product = new Product("product1", 100f, 0.1f, 2);
+        Product product = new Product("product1", 100d, 0.1d, 2);
 
 		given()
 		.contentType("application/json")
@@ -52,8 +52,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
     }
@@ -64,7 +64,7 @@ public class AdminProductCRUDTest {
     void testAddProductReturnProductAlreadyExist(){
 
         // Arrange
-        Product product = new Product("product1", 100f, 0.1f, 2);
+        Product product = new Product("product1", 100d, 0.1d, 2);
     
         given()
 		.contentType("application/json")
@@ -73,8 +73,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         // Act and Assert
@@ -93,7 +93,7 @@ public class AdminProductCRUDTest {
     @DirtiesContext
     void testReadProductReturnProduct(){
         // Arrange
-        Product product = new Product("product1", 100f, 0.1f, 2);
+        Product product = new Product("product1", 100d, 0.1d, 2);
 
         given()
 		.contentType("application/json")
@@ -103,8 +103,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
 
@@ -117,8 +117,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
     }
@@ -127,8 +127,8 @@ public class AdminProductCRUDTest {
     @DirtiesContext
     void testAdd2ProductsReturnProductList(){
         // Arrange
-        Product product1 = new Product("product1", 100f, 0.1f, 2);
-        Product product2 = new Product("product2", 100f, 0.1f, 2);
+        Product product1 = new Product("product1", 100d, 0.1d, 2);
+        Product product2 = new Product("product2", 100d, 0.1d, 2);
         productRepository.save(product1);
         productRepository.save(product2);
         
@@ -153,8 +153,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(Arrays.asList(1, 2)))
         .body("name", equalTo(Arrays.asList("product1", "product2")))
-        .body("price", equalTo(Arrays.asList(100f, 100f)))
-        .body("discount", equalTo(Arrays.asList(0.1f, 0.1f)))
+        .body("price", equalTo(Arrays.asList(100d, 100d)))
+        .body("discount", equalTo(Arrays.asList(0.1d, 0.1d)))
         .body("totalAvailable", equalTo(Arrays.asList(2, 2)));
 
     }
@@ -179,9 +179,9 @@ public class AdminProductCRUDTest {
     @DirtiesContext
     void testUpdateProductReturnProduct(){
 
-        Product productInit = new Product("product1", 100f, 0.1f, 2);
+        Product productInit = new Product("product1", 100d, 0.1d, 2);
 
-        Product productUpdated = new Product("product1", 130f, 0.5f, 100);
+        Product productUpdated = new Product("product1", 130d, 0.5d, 100);
 
         // Arrange
         given()
@@ -193,8 +193,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         given()
@@ -205,8 +205,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         // Act and Assert - Updating the product
@@ -219,8 +219,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(130f))
-        .body("discount", equalTo(0.5f))
+        .body("price", equalTo(130d))
+        .body("discount", equalTo(0.5d))
         .body("totalAvailable", equalTo(100));
 
         // checking that the product was updated by requesting the updated protect and checking it against the expected attributes
@@ -232,8 +232,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(130f))
-        .body("discount", equalTo(0.5f))
+        .body("price", equalTo(130d))
+        .body("discount", equalTo(0.5d))
         .body("totalAvailable", equalTo(100));
 
     }
@@ -244,7 +244,7 @@ public class AdminProductCRUDTest {
     void testUpdateProductReturnNoProductExist(){
 
         // Arrange
-        Product productUpdated = new Product("product1", 130f, 0.5f, 100);
+        Product productUpdated = new Product("product1", 130d, 0.5d, 100);
 
         // Act and Assert - Updating the product
         given()
@@ -262,7 +262,7 @@ public class AdminProductCRUDTest {
     @DirtiesContext
     void testDeleteProductReturnProduct(){
 
-        Product productInit = new Product("product1", 100f, 0.1f, 2);
+        Product productInit = new Product("product1", 100d, 0.1d, 2);
 
         // Arrange
         given()
@@ -274,8 +274,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.CREATED.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         given()
@@ -286,8 +286,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         // Act and Assert - Updating the product
@@ -300,8 +300,8 @@ public class AdminProductCRUDTest {
         .statusCode(HttpStatus.OK.value())
         .body("id", is(1))
         .body("name", equalTo("product1"))
-        .body("price", equalTo(100f))
-        .body("discount", equalTo(0.1f))
+        .body("price", equalTo(100d))
+        .body("discount", equalTo(0.1d))
         .body("totalAvailable", equalTo(2));
 
         // checking that the product was updated by requesting the updated protect and checking it against the expected attributes
@@ -320,7 +320,7 @@ public class AdminProductCRUDTest {
     void testDeleteProductReturnNoProductExist(){
 
         // Arrange
-        Product productInit = new Product("product1", 100f, 0.1f, 2);
+        Product productInit = new Product("product1", 100d, 0.1d, 2);
 
         // Act and Assert - Updating the product
         given()

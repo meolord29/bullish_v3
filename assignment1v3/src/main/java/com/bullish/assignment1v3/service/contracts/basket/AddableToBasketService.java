@@ -8,6 +8,6 @@ import com.bullish.assignment1v3.model.users.Client;
 
 public interface AddableToBasketService {
 
-    public ResponseEntity<Basket> addToBasket(Client client, Product product);
+    public ResponseEntity<Basket> addToBasket(Basket basket);
 
 }

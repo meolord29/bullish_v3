@@ -48,21 +48,21 @@ public class ClientProductCRUDTest {
     @DirtiesContext
     void testReadProductReturnProduct(){
         // Arrange
-        Product product = new Product("product1", 100f, 0.1f, 2);
+        Product product = new Product("product100", 100d, 0.1d, 2);
         productRepository.save(product);
         
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/products/product1")
+        .get("client_access/products/product100")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("name", equalTo("product1"))
+        .body("id", is(2))
+        .body("name", equalTo("product100"))
         .body("price", equalTo(100f))
         .body("discount", equalTo(0.1f))
-        .body("totalAvailable", equalTo(2));
+        .body("total", equalTo(2));
 
         }
 
@@ -70,11 +70,10 @@ public class ClientProductCRUDTest {
     @DirtiesContext
     void testReadProductsReturnProducts(){
         // Arrange
-        Product product1 = new Product("product1", 100f, 0.1f, 2);
-        Product product2 = new Product("product2", 100f, 0.1f, 2);
-        productRepository.save(product1);
+        Product product2 = new Product("product5", 100d, 0.1d, 2);
         productRepository.save(product2);
         
+    
         // Act and Assert
         // Retrieve a list of products (assuming your endpoint returns a list)
         given()
@@ -95,10 +94,10 @@ public class ClientProductCRUDTest {
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(Arrays.asList(1, 2)))
-        .body("name", equalTo(Arrays.asList("product1", "product2")))
+        .body("name", equalTo(Arrays.asList("product1", "product5")))
         .body("price", equalTo(Arrays.asList(100f, 100f)))
         .body("discount", equalTo(Arrays.asList(0.1f, 0.1f)))
-        .body("totalAvailable", equalTo(Arrays.asList(2, 2)));
+        .body("total", equalTo(Arrays.asList(10, 2)));
         }
 
         
@@ -112,7 +111,7 @@ public class ClientProductCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/products/product1")
+        .get("client_access/products/product40")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
 

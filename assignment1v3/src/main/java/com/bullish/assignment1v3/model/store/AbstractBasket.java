@@ -23,13 +23,13 @@ public abstract class AbstractBasket {
     @Column(name="productName")
     private String productName;
 
-    @Column(name="totalSelected")
-    private Integer totalSelected;
+    @Column(name="total")
+    private Integer total;
 
-    public AbstractBasket(String username, String productName, Integer totalSelected){
+    public AbstractBasket(String username, String productName, Integer total){
         this.username = username;
         this.productName = productName;
-        this.totalSelected = totalSelected;
+        this.total = total;
     }
 
     public AbstractBasket(){

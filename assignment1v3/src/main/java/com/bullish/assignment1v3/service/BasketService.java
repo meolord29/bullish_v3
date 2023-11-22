@@ -1,5 +1,6 @@
 package com.bullish.assignment1v3.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -12,13 +13,16 @@ import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
+import com.bullish.assignment1v3.service.contracts.basket.BasketAllReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
+
 import jakarta.transaction.Transactional;
 
 @Service
 public class BasketService implements
-BasketReadableService, RemovableFromBasketService, AddableToBasketService{
+BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, BasketReadableService{
 
     private BasketRepository basketRepository;
 
@@ -31,7 +35,7 @@ BasketReadableService, RemovableFromBasketService, AddableToBasketService{
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
 
-        Optional<Basket> basketOpt = readBasket(basketUpdated.getUsername());
+        Optional<Basket> basketOpt = readBasket(basketUpdated);
 
         if (basketOpt.isPresent()) {
             Basket basket = basketOpt.get();
@@ -44,35 +48,72 @@ BasketReadableService, RemovableFromBasketService, AddableToBasketService{
     }
 
     @Override
-    public Optional<Basket> readBasket(String clientUsername) {
-        return basketRepository.findByUsername(clientUsername);
+    public ResponseEntity<List<Basket>> readBasketAll(String clientUsername) {
+
+        List<Basket> basketAll = basketRepository.findByUsernameIs(clientUsername);
+
+        if (basketAll != null && !basketAll.isEmpty()) {
+            return new ResponseEntity<>(basketAll, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @Override
+    public Optional<Basket> readBasket(Basket basket) {
+        return basketRepository.findByUsernameAndProductName(basket.getUsername(), basket.getProductName());
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Basket> addToBasket(Client client, Product product) {
+    public ResponseEntity<Basket> addToBasket(Basket basket) {
 
-        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(client.getUsername(), product.getName());
+        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(basket.getUsername(), basket.getProductName());
 
         if (basketProductOpt.isPresent()) {
-            Basket basketUpdated = new Basket(client.getUsername(), product.getName(), basketProductOpt.get().getTotalSelected()+product.getTotal());
+            Basket basketUpdated = basketProductOpt.get();
+
+            basketUpdated.setTotal(basketUpdated.getTotal()+basket.getTotal());
+
             return updateBasket(basketUpdated);
 
-        } else {
-            Basket newBasket = new Basket(client.getUsername(), product.getName(), product.getTotal());
+        } 
+        else {
+            Basket newBasket = new Basket();
+
+            newBasket.setUsername(basket.getUsername());
+            newBasket.setTotal(basket.getTotal());
+            newBasket.setProductName(basket.getProductName()); 
             basketRepository.save(newBasket);
+
             return new ResponseEntity<>(newBasket, HttpStatus.CREATED);
         }
     }
 
     @Override
-    public ResponseEntity<Basket> removeFromBasket(Client client, Product product) {
-        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(client.getUsername(), product.getName());
+    public ResponseEntity<Basket> removeFromBasket(Basket basket) {
+        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(basket.getUsername(), basket.getProductName());
 
         if (basketProductOpt.isPresent()) {
-            basketRepository.delete(basketProductOpt.get());
-            return new ResponseEntity<>(basketProductOpt.get(), HttpStatus.OK);
-        } else {
+
+            if (basket.getTotal() == basketProductOpt.get().getTotal()){ // if all of the product is deleted
+                basketRepository.delete(basketProductOpt.get());
+                return new ResponseEntity<>(basketProductOpt.get(), HttpStatus.OK);
+            }
+
+            else if (basket.getTotal() <= basketProductOpt.get().getTotal()){ // if only some of the product is deleted
+                Basket basketUpdated = basketProductOpt.get();
+
+                basketUpdated.setTotal(basketUpdated.getTotal()-basket.getTotal());
+
+                return updateBasket(basketUpdated);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } 
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

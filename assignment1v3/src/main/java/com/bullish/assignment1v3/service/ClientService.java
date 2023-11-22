@@ -122,25 +122,25 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
     // All to do with basket
 
     // CR_U_D for Basket Table
-    public ResponseEntity<Basket> updateBasket(Client client, Product product) {
-        return basketService.addToBasket(client, product);
+    public ResponseEntity<Basket> updateBasket(Basket basket) {
+        return basketService.addToBasket(basket);
     }
 
-    public ResponseEntity<Basket> addToBasket(Client client, Product product) {// _C_RUD for Basket Table
-        return basketService.addToBasket(client, product);
+    public ResponseEntity<Basket> addToBasket(Basket basket) {// _C_RUD for Basket Table
+        return basketService.addToBasket(basket);
     }
 
-    public ResponseEntity<Basket> removeFromBasket(Client client, Product product) {// CRU_D_ for Basket Table
-        return basketService.removeFromBasket(client, product);
+    public ResponseEntity<Basket> removeFromBasket(Basket basket) {// CRU_D_ for Basket Table
+        return basketService.removeFromBasket(basket);
     }
 
-    public Optional<Basket> readBasket(String clientUsername) { // C_R_UD for Basket Table
-        return basketService.readBasket(clientUsername);
+    public ResponseEntity<List<Basket>> getBasket(String clientUsername) { // C_R_UD for Basket Table
+        return basketService.readBasketAll(clientUsername);
     }
+
 
     public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) { 
         // C_R_UD for Basket Table
-
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readConfirmedPurchase'");
     }

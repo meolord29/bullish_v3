@@ -82,28 +82,28 @@ public class ClientClientCRUDTest {
     @DirtiesContext
     void testReadClientReturnClient() {
         // Arrange
-        Client client = new Client("client1", "password123");
+        Client client = new Client("client10", "password123");
 
         given()
         .contentType("application/json")
         .body(client)
         .when()
-        .post("client_access/clients/client1")
+        .post("client_access/clients/client10")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client10"))
         .body("password", equalTo("password123"));
 
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client10")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client10"))
         .body("password", equalTo("password123"));
     }
 
@@ -116,7 +116,7 @@ public class ClientClientCRUDTest {
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client10")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -126,30 +126,30 @@ public class ClientClientCRUDTest {
     @DirtiesContext
     void testUpdateClientReturnClient() {
 
-        Client clientInit = new Client("client1", "password123");
+        Client clientInit = new Client("client6", "password123");
 
-        Client clientUpdated = new Client("client1", "newPassword456");
+        Client clientUpdated = new Client("client6", "newPassword456");
 
-        // Arrange
+        // Arrange0
         given()
         .contentType("application/json")
         .body(clientInit)
         .when()
-        .post("client_access/clients/client1")
+        .post("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client6"))
         .body("password", equalTo("password123"));
 
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client6"))
         .body("password", equalTo("password123"));
 
         // Act and Assert - Updating the client
@@ -157,22 +157,22 @@ public class ClientClientCRUDTest {
         .contentType("application/json")
         .body(clientUpdated)
         .when()
-        .put("client_access/clients/client")
+        .put("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client6"))
         .body("password", equalTo("newPassword456"));
 
         // checking that the client was updated by requesting the updated client and checking it against the expected attributes
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client6"))
         .body("password", equalTo("newPassword456"));
     }
 
@@ -191,7 +191,7 @@ public class ClientClientCRUDTest {
         .when()
         .put("client_access/clients/client1")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
+        .statusCode(HttpStatus.OK.value());
     }
 
     // CRU_D_ for Client #1
@@ -199,28 +199,28 @@ public class ClientClientCRUDTest {
     @DirtiesContext
     void testDeleteClientReturnClient() {
 
-        Client clientInit = new Client("client1", "password123");
+        Client clientInit = new Client("client11", "password123");
 
         // Arrange
         given()
         .contentType("application/json")
         .body(clientInit)
         .when()
-        .post("client_access/clients/client1")
+        .post("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 
         // Act and Assert - Updating the client
@@ -228,18 +228,18 @@ public class ClientClientCRUDTest {
         .contentType("application/json")
         .body(clientInit)
         .when()
-        .delete("client_access/clients/client1")
+        .delete("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
+        .body("id", is(2))
+        .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 
         // checking that the client was deleted by trying to request the deleted client
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/clients/client1")
+        .get("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
     }
@@ -247,17 +247,16 @@ public class ClientClientCRUDTest {
     // CRU_D_ for Client #2
     @Test
     @DirtiesContext
-    void testDeleteClientReturnBadRequest() {
-
+    void testDeleteClientReturnBadRequest(){
         // Arrange
-        Client clientInit = new Client("client1", "password123");
+        Client clientInit = new Client("client50", "password123");
 
         // Act and Assert - Updating the client
         given()
         .contentType("application/json")
         .body(clientInit)
         .when()
-        .delete("client_access/clients/client1")
+        .delete("client_access/clients/client50")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
     }

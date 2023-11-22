@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 public class Basket extends AbstractBasket{
 
     @Autowired
-    public Basket(String username, String productName, Integer totalSelected){
-        super(username, productName, totalSelected);
+    public Basket(String username, String productName, Integer total){
+        super(username, productName, total);
     }
 
     @Autowired

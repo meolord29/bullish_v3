@@ -18,14 +18,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import com.bullish.assignment1v3.Assignment1v3Application;
 import com.bullish.assignment1v3.controller.ClientController;
 import com.bullish.assignment1v3.model.store.Basket;
-import com.bullish.assignment1v3.model.store.Product;
-import com.bullish.assignment1v3.model.users.Admin;
-import com.bullish.assignment1v3.model.users.Client;
+import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ProductRepository;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-
 
 @SpringBootTest(classes = Assignment1v3Application.class)
 @AutoConfigureMockMvc
@@ -41,6 +38,9 @@ public class ClientBasketCRUDTest {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private BasketRepository basketRepository;
+
     @BeforeEach
     public void setup() {
         RestAssuredMockMvc.standaloneSetup(clientController);
@@ -51,286 +51,161 @@ public class ClientBasketCRUDTest {
     @DirtiesContext
     void testAddBasketReturnBasket(){
         // Arrange
-        Product product1 = new Product("product1", 100f, 0.1f, 10);
-        productRepository.save(product1);
-        Client client1 = new Client("client1", "password123");
-        clientRepository.save(client1);
+        Basket basket1 = new Basket("client1", "product3", 20);
 
         given()
         .contentType("application/json")
-        .body(Map.of("client", client1, "product", product1))  // Assuming addToBasket expects an object with 'client' and 'product' properties
+        .body(basket1)  // Assuming addToBasket expects an object with 'client' and 'product' properties
         .when()
         .post("client_access/basket")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(1))
-        .body("name", equalTo("product1"))
-        .body("price", equalTo(100));  // Assuming the price is an integer, adjust it based on your actual implementation
+        .body("id", is(3))
+        .body("username", equalTo("client1"))
+        .body("productName", equalTo("product3"))
+        .body("total", equalTo(20));  // Assuming the price is an integer, adjust it based on your actual implementation
     }
 
     // _C_RUD for Admin #2
     @Test
     @DirtiesContext
-    void testAddAdminReturnAdminAlreadyExist(){
+    void testAddBasketReturnUpdatedBasket(){
 
         // Arrange
-        Admin admin = new Admin("admin1", "password123");
-
-        given()
-        .contentType("application/json")
-        .body(admin)
-        .when().post("admin_access/admins/admin").then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+        Basket basket1 = new Basket("client1", "product1", 20);
 
         // Act and Assert
         given()
-            .contentType("application/json")
-            .body(admin)
-        .when()
-            .post("admin_access/admins/admin")
-        .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
-
-    }
-
-    @Test
-    @DirtiesContext
-    void testAddAdminsReturnAdmins(){
-        // Arrange
-        Admin admin = new Admin("admin1", "password123");
-
-        given()
         .contentType("application/json")
-        .body(admin)
+        .body(basket1)  // Assuming addToBasket expects an object with 'client' and 'product' properties
         .when()
-        .post("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        // Assert that the returned list contains both product1 and product2
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins")
+        .post("client_access/basket")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo(Arrays.asList("RootAdmin", "admin1")))
-        .body("password", equalTo(Arrays.asList("password", "password123")));
-
+        .body("id", is(1))
+        .body("username", equalTo("client1"))
+        .body("productName", equalTo("product1"))
+        .body("total", equalTo(30)); 
     }
 
     // C_R_UD for Admin #1
     @Test
     @DirtiesContext
-    void testReadAdminReturnAdmin(){
-        // Arrange
-        Admin admin = new Admin("admin1", "password123");
+    void testReadBasketReturnBaskets(){
 
-        given()
-        .contentType("application/json")
-        .body(admin)
-        .when()
-        .post("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        // Act and Assert
+        // Assert that the returned list contains both product1 and product2
         given()
         .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+        .get("client_access/basket/client1/all")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+        .body("id", is(Arrays.asList(1, 2)))
+        .body("username", equalTo(Arrays.asList("client1", "client1")))
+        .body("productName", equalTo(Arrays.asList("product1", "product2")))
+        .body("total", equalTo(Arrays.asList(10, 20)));
+        }
 
-    }
+    
 
     // C_R_UD for Admin #2
     @Test
     @DirtiesContext
-    void testReadAdminReturnNoAdminExist(){
+    void testReadBasketReturnNoBasketExist(){
 
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+        .get("client_access/basket/client2/all")
         .then()
         .statusCode(HttpStatus.NOT_FOUND.value());
 
     }
 
-    // CR_U_D for Admin #1
-    @Test
-    @DirtiesContext
-    void testUpdateAdminReturnAdmin(){
-
-        Admin adminInit = new Admin("admin1", "password123");
-
-        Admin adminUpdated = new Admin("admin1", "newPassword456");
-
-        // Arrange
-        given()
-        .contentType("application/json")
-        .body(adminInit)
-        .when()
-        .post("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        // Act and Assert - Updating the admin
-        given()
-        .contentType("application/json")
-        .body(adminUpdated)
-        .when()
-        .put("admin_access/admins/admin")
-        .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("newPassword456"));
-
-        // checking that the admin was updated by requesting the updated admin and checking it against the expected attributes
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("newPassword456"));
-
-    }
-
-    // CR_U_D for Admin #2
-    @Test
-    @DirtiesContext
-    void testUpdateAdminReturnNoAdminExist(){
-
-        // Arrange
-        Admin adminUpdated = new Admin("admin1", "newPassword456");
-
-        // Act and Assert - Updating the admin
-        given()
-        .contentType("application/json")
-        .body(adminUpdated)
-        .when()
-        .put("admin_access/admins/admin")
-        .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
-    }
 
     // CRU_D_ for Admin #1
     @Test
     @DirtiesContext
-    void testDeleteAdminReturnAdmin(){
-
-        Admin adminInit = new Admin("admin1", "password123");
+    void testDeletePartialBasketReturnBasket(){
 
         // Arrange
-        given()
-        .contentType("application/json")
-        .body(adminInit)
-        .when()
-        .post("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+        Basket basket = new Basket("client1", "product2", 10);
 
+        // Act
         given()
         .contentType("application/json")
+        .body(basket) 
         .when()
-        .get("admin_access/admins/admin1")
+        .delete("client_access/basket")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+        .body("id", equalTo(2))
+        .body("username", equalTo("client1"))
+        .body("productName", equalTo("product2"))
+        .body("total", equalTo(10));
 
-        // Act and Assert - Updating the admin
+        //Assert
         given()
         .contentType("application/json")
-        .body(adminInit)
         .when()
-        .delete("admin_access/admins/admin1")
+        .get("client_access/basket/client1/all")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+        .body("id", is(Arrays.asList(1, 2)))
+        .body("username", equalTo(Arrays.asList("client1", "client1")))
+        .body("productName", equalTo(Arrays.asList("product1", "product2")))
+        .body("total", equalTo(Arrays.asList(10, 10)));
+        }
 
-        // checking that the admin was deleted by trying to request the deleted admin
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
-    }
 
     // CRU_D_ for Admin #2
     @Test
     @DirtiesContext
-    void testDeleteAdminReturnBadRequest(){
+    void testDeleteAllBasketReturnBasket(){
         // Arrange
-        Admin adminInit = new Admin("admin1", "password123");
+        Basket basket = new Basket("client1", "product2", 20);
 
-        // Act and Assert - Updating the admin
+        // Act
         given()
         .contentType("application/json")
-        .body(adminInit)
+        .body(basket) 
         .when()
-        .delete("admin_access/admins/admin1")
+        .delete("client_access/basket")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+        .statusCode(HttpStatus.OK.value())
+        .body("id", equalTo(2))
+        .body("username", equalTo("client1"))
+        .body("productName", equalTo("product2"))
+        .body("total", equalTo(20));
 
+        //Assert
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/basket/client1/all")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(Arrays.asList(1)))
+        .body("username", equalTo(Arrays.asList("client1")))
+        .body("productName", equalTo(Arrays.asList("product1")))
+        .body("total", equalTo(Arrays.asList(10)));
     }
 
     @Test
     @DirtiesContext
-    void testDeleteRootAdminReturnBadRequest(){
+    void testDeleteBasketReturnBadRequest(){
         // Arrange
-        Admin adminInit = new Admin("RootAdmin", "password");
+        Basket basket = new Basket("client1", "product2", 30);
 
-        // Act and Assert - Updating the admin
+        // Act and Assert
         given()
         .contentType("application/json")
-        .body(adminInit)
+        .body(basket) 
         .when()
-        .delete("admin_access/admins/admin1")
+        .delete("client_access/basket")
         .then()
         .statusCode(HttpStatus.BAD_REQUEST.value());
-
     }
 }
 

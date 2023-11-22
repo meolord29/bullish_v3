@@ -22,15 +22,15 @@ public abstract class AbstractItem {
     private String name;
 
     @Column(name="price")
-    private Float price;
+    private Double price;
 
     @Column(name="discount")
-    private Float discount;
+    private Double discount;
 
     @Column(name="total")
     private Integer total;
     
-    public AbstractItem(String name, Float price, Float discount, Integer total){
+    public AbstractItem(String name, Double price, Double discount, Integer total){
         this.name = name;
         this.price = price;
         this.discount = discount;

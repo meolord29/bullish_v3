@@ -11,7 +11,7 @@ import jakarta.persistence.UniqueConstraint;
 public class Product extends AbstractItem{
 
     @Autowired
-    public Product(String name, Float price, Float discount, Integer total){
+    public Product(String name, Double price, Double discount, Integer total){
         super(name, price, discount, total);
     }
     @Autowired

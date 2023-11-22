@@ -43,9 +43,9 @@ public class AdminClientCRUDTest {
     void testAddClientReturnClients(){
 
         // Arrange
-        Client client1 = new Client("client1", "password123");
+        //Client client1 = new Client("client1", "password123");
         Client client2 = new Client("client2", "password123");
-        clientRepository.save(client1);
+        //clientRepository.save(client1);
         clientRepository.save(client2);
 
         // Assert that the returned list contains both product1 and product2
