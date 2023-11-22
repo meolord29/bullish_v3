@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.discountStrategy.DiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce;
-import com.bullish.assignment1v3.discountStrategy.discountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest;
+import com.bullish.assignment1v3.discountStrategy.DiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest;
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.service.contracts.BasketCalculate.BasketSumCalculatable;
@@ -20,7 +20,7 @@ public class BasketCalculateService implements BasketSumCalculatable{
     private DiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce stratOne;
 
     @Autowired
-    private discountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest stratTwo;
+    private DiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest stratTwo;
     //
 
     @Autowired
@@ -38,7 +38,7 @@ public class BasketCalculateService implements BasketSumCalculatable{
 
             double individual_discount = productService.readProduct(basketItem.getProductName()).get().getDiscount();
 
-            if (individual_discount != 0){
+            if (individual_discount != 0d){
                 price = productService.readProduct(basketItem.getProductName()).get().getPrice() * (1-individual_discount);
             }
             else{
@@ -54,17 +54,17 @@ public class BasketCalculateService implements BasketSumCalculatable{
         return basketHashMap;
     }
 
-    private Double calculateBasketSumOwed(List<Basket> basket){
+    private Double calculateBasketSumOwed(List<Basket> baskets){
         Double totalSum = 0d;
 
 
-        for(Basket basketItem : basket){
+        for(Basket basketItem : baskets){
             Product product = productService.readProduct(basketItem.getProductName()).get();
 
             double individual_discount = product.getDiscount();
 
-            if (individual_discount != 0){
-                totalSum += productService.readProduct(basketItem.getProductName()).get().getPrice() * (1-individual_discount) * basketItem.getTotal();;
+            if (individual_discount != 0d){
+                totalSum += productService.readProduct(basketItem.getProductName()).get().getPrice() * (1-individual_discount) * basketItem.getTotal();
             }
             else{
                 totalSum += productService.readProduct(basketItem.getProductName()).get().getPrice() * basketItem.getTotal();
@@ -89,8 +89,8 @@ public class BasketCalculateService implements BasketSumCalculatable{
     }
 
     @Override
-    public Double calculateBasketSum(List<Basket> basket) {
-        return calculateBasketSumOwed(basket) - calculateDiscounted(basket);
+    public Double calculateBasketSum(List<Basket> baskets) {
+        return calculateBasketSumOwed(baskets) - calculateDiscounted(baskets);
 
     }
 

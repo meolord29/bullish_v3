@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DiscoudntForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest {
+public class DiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest {
 
     public Double getDiscount(ConcurrentHashMap<String, ConcurrentHashMap<String, Double>> basketHashMap)
         {
@@ -24,7 +24,9 @@ public class DiscoudntForHavingThreeDifferentProducts_TenPercentOffAllMostPricie
             
             Collections.sort(product_price_list, Collections.reverseOrder()); 
             
-            for (Double price : product_price_list){discount += price*0.1;}
+            for (Double price : product_price_list){
+                discount += price*0.1;
+            }
 
             return discount;
 

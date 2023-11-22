@@ -60,4 +60,35 @@ public class ClientBasketDiscountTest {
         .body("username", equalTo("client8"))
         .body("priceTotal", equalTo(855f));
     }
+
+    @Test
+    @DirtiesContext
+    void testDiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest() {
+        // Arrange
+        
+        productRepository.save(new Product("product5", 100d, 0.0d, 10));
+        productRepository.save(new Product("product6", 100d, 0.0d, 10));
+        productRepository.save(new Product("product7", 100d, 0.0d, 10));
+        productRepository.save(new Product("product8", 100d, 0.0d, 10));
+        productRepository.save(new Product("product9", 100d, 0.0d, 10));
+
+        clientRepository.save(new Client("client77", "password123"));
+        
+        basketRepository.save(new Basket("client77", "product5", 1));
+        basketRepository.save(new Basket("client77", "product6", 1));
+        basketRepository.save(new Basket("client77", "product7", 1));
+        basketRepository.save(new Basket("client77", "product8", 1));
+        basketRepository.save(new Basket("client77", "product9", 1));
+
+
+        // Act and Assert
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/basket/client77/priceTotal")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("username", equalTo("client8"))
+        .body("priceTotal", equalTo(450f));
+    }
 }
