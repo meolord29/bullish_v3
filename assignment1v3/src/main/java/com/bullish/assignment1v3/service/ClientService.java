@@ -123,41 +123,28 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         return basketService.addToBasket(basket);
     }
 
+    // _C_RUD for Basket Table
     public ResponseEntity<Basket> addToBasket(Basket basket) {// _C_RUD for Basket Table
         return basketService.addToBasket(basket);
     }
 
+    // CRU_D_ for Basket Table
     public ResponseEntity<Basket> removeFromBasket(Basket basket) {// CRU_D_ for Basket Table
         return basketService.removeFromBasket(basket);
     }
 
+    // C_R_UD for Basket Table
     public ResponseEntity<List<Basket>> getBasket(String clientUsername) { // C_R_UD for Basket Table
         return basketService.readBasketAll(clientUsername);
     }
-
+    // getting price for the basket total including the discounts
     public ResponseEntity<PriceOutput> getTotalPrice(String clientUsername){
         return basketService.getTotalPrice(clientUsername);
     }
 
-    public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) { 
-        // C_R_UD for Basket Table
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readConfirmedPurchase'");
-    }
+    // All actions to do with ConfirmedPurchases
 
 
-    public void addConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) {
-        // _C_RUD for Basket Table
-        // First: Check if Product is a non zero count in the products table, else abort the method
-        // Second: method checks if product exists within the basket, else abort the method
-        // Third: method requests Admin Service to delete product from the product Table with specified amount
-        // Forth: method calls the updateBasket to update the counter of specific product counter
-        // Fifth: method adds product to confirmedPurchase table -> update method with +n
-
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addConfirmedPurchase'");
-    }
 
     
 
