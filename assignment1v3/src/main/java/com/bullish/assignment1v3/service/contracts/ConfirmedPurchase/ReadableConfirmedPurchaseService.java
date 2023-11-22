@@ -1,9 +1,9 @@
-package com.bullish.assignment1v3.service.contracts.ConfirmedPurchase;
+package com.bullish.assignment1v3.service;
 
-import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
+import java.util.Optional;
+
+import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
 
 public interface ReadableConfirmedPurchaseService {
-
-    public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository);
-
+    public Optional<ConfirmedPurchase> readConfirmedPurchase(ConfirmedPurchase confirmedPurchaseUpdated);
 }

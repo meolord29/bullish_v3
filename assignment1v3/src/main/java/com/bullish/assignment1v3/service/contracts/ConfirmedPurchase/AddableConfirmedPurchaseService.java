@@ -1,9 +1,11 @@
 package com.bullish.assignment1v3.service.contracts.ConfirmedPurchase;
 
-import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
+import org.springframework.http.ResponseEntity;
+
+import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
 
 public interface AddableConfirmedPurchaseService {
 
-    public void addConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository);
+    public ResponseEntity<ConfirmedPurchase> addConfirmedPurchase(ConfirmedPurchase ConfirmedPurchase);
 
 }
