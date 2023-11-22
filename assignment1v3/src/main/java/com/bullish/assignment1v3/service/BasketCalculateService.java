@@ -6,14 +6,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bullish.assignment1v3.discountStrategy.DiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce;
+import com.bullish.assignment1v3.discountStrategy.discountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest;
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.service.contracts.BasketCalculate.BasketSumCalculatable;
-import com.bullish.assignment1v3.service.contracts.BasketCalculate.BasketSumDiscountable;
-import com.bullish.assignment1v3.service.contracts.BasketCalculate.BasketSumOwedCalculatable;
 
 @Service
-public class BasketCalculateService implements BasketSumCalculatable, BasketSumOwedCalculatable, BasketSumDiscountable {
+public class BasketCalculateService implements BasketSumCalculatable{
+
+    // DISCOUNT WIRING 
+    @Autowired
+    private DiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce stratOne;
+
+    @Autowired
+    private discountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest stratTwo;
+    //
 
     @Autowired
     private ProductService productService;
@@ -37,20 +45,7 @@ public class BasketCalculateService implements BasketSumCalculatable, BasketSumO
         return basketHashMap;
     }
 
-    @Override
-    public Double calculateBasketSum(List<Basket> basket) {
-
-        Double totalSum = 0d;
-        for(Basket basketItem : basket){
-            Product product = productService.readProduct(basketItem.getProductName()).get();
-            totalSum += product.getPrice() * basketItem.getTotal();
-        }
-        return totalSum;
-
-    }
-
-    @Override
-    public Double CalculateBasketSumOwed(List<Basket> basket){
+    private Double calculateBasketSumOwed(List<Basket> basket){
         Double totalSum = 0d;
         for(Basket basketItem : basket){
             Product product = productService.readProduct(basketItem.getProductName()).get();
@@ -59,14 +54,24 @@ public class BasketCalculateService implements BasketSumCalculatable, BasketSumO
         return totalSum;
     }
     
+    private Double calculateDiscounted(List<Basket> basket){
+        ConcurrentHashMap<String, ConcurrentHashMap<String, Double>> basketHashMap = getHashmapOfBasket(basket);
+
+        Double total_discount = 0d;
+
+        // can be later replaced with reflections, 
+        // to just call upon the method of each class in the discount strategy package
+        total_discount += stratOne.getDiscount(basketHashMap); // For every 2nd, once
+        total_discount += stratTwo.getDiscount(basketHashMap); // For 5 of different kind
+
+        return total_discount;
+    }
+
     @Override
-    public Double CalculateDiscounted(List<Basket> basket){
-        Double totalSum = 0d;
-        for(Basket basketItem : basket){
-            Product product = productService.readProduct(basketItem.getProductName()).get();
-            totalSum += product.getPrice() * basketItem.getTotal();
-        }
-        return totalSum;
+    public Double calculateBasketSum(List<Basket> basket) {
+        
+        return calculateBasketSumOwed(basket) - calculateDiscounted(basket);
+
     }
 
 }
