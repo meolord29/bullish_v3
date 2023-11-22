@@ -17,7 +17,7 @@ public class DiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPricies
             
             ArrayList<Double> product_price_list = new ArrayList<Double>();
             for (Map.Entry<String, ConcurrentHashMap<String, Double>> set : basketHashMap.entrySet()) {
-                if (set.getValue().get("total") > 1){
+                if (set.getValue().get("total") >= 1){
                     product_price_list.add(set.getValue().get("price"));
                 }
             }

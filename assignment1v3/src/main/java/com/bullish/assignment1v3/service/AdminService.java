@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.model.users.Client;
@@ -45,6 +46,9 @@ ClientReadableService, ClientsReadableService
     private ProductService productService;
 
     @Autowired
+    private BasketService basketService;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -78,6 +82,13 @@ ClientReadableService, ClientsReadableService
 
     @Override
     public ResponseEntity<Product> deleteProduct(Product product) {
+
+        List<Basket> basketsWithProduct = basketService.readAllBasketsByProductName(product);
+
+        for (Basket basket : basketsWithProduct){ // need to delete the product from people's baskets as well
+            clientService.removeFromBasket(basket);
+        }
+
         return productService.deleteProduct(product);
     }
 

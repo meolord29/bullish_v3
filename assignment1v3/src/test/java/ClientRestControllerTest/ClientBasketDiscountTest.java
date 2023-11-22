@@ -66,19 +66,19 @@ public class ClientBasketDiscountTest {
     void testDiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest() {
         // Arrange
         
-        productRepository.save(new Product("product5", 100d, 0.0d, 10));
-        productRepository.save(new Product("product6", 100d, 0.0d, 10));
-        productRepository.save(new Product("product7", 100d, 0.0d, 10));
-        productRepository.save(new Product("product8", 100d, 0.0d, 10));
-        productRepository.save(new Product("product9", 100d, 0.0d, 10));
+        productRepository.save(new Product("product10", 100d, 0.0d, 10));
+        productRepository.save(new Product("product11", 100d, 0.0d, 10));
+        productRepository.save(new Product("product12", 100d, 0.0d, 10));
+        productRepository.save(new Product("product13", 100d, 0.0d, 10));
+        productRepository.save(new Product("product14", 100d, 0.0d, 10));
 
         clientRepository.save(new Client("client77", "password123"));
-        
-        basketRepository.save(new Basket("client77", "product5", 1));
-        basketRepository.save(new Basket("client77", "product6", 1));
-        basketRepository.save(new Basket("client77", "product7", 1));
-        basketRepository.save(new Basket("client77", "product8", 1));
-        basketRepository.save(new Basket("client77", "product9", 1));
+
+        basketRepository.save(new Basket("client77", "product10", 1));
+        basketRepository.save(new Basket("client77", "product11", 1));
+        basketRepository.save(new Basket("client77", "product12", 1));
+        basketRepository.save(new Basket("client77", "product13", 1));
+        basketRepository.save(new Basket("client77", "product14", 1));
 
 
         // Act and Assert
@@ -88,7 +88,7 @@ public class ClientBasketDiscountTest {
         .get("client_access/basket/client77/priceTotal")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("username", equalTo("client8"))
+        .body("username", equalTo("client77"))
         .body("priceTotal", equalTo(450f));
     }
 }

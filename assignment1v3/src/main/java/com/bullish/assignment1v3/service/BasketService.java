@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.PriceOutput;
+import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketAllReadableService;
@@ -21,7 +22,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class BasketService implements
-BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, BasketReadableService{
+BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, BasketReadableService, BasketsReadableByProductName{
 
     private BasketRepository basketRepository;
 
@@ -65,6 +66,11 @@ BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, Ba
     @Override
     public Optional<Basket> readBasket(Basket basket) {
         return basketRepository.findByUsernameAndProductName(basket.getUsername(), basket.getProductName());
+    }
+
+    @Override
+    public List<Basket> readAllBasketsByProductName(Product product) {
+        return basketRepository.findByProductName(product.getName());
     }
 
     @Override

@@ -14,5 +14,7 @@ public interface BasketRepository extends JpaRepository<Basket,Long>{
     Optional<Basket> findByUsernameAndProductName(String clientUsername, String productName);
 
     List<Basket> findByUsernameIs(String username);
+
+    List<Basket> findByProductName(String productName);
     
 }
