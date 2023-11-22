@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.service.ClientService;
@@ -77,6 +78,32 @@ public class ClientController {
     }
 
 
+    // All to do with basket
+    @GetMapping("/basket/{username}")
+    ResponseEntity<Basket> getBasket(@PathVariable String username){
+        Optional<Basket> basketOpt = clientService.readBasket(username);
 
+        if (basketOpt.isPresent()) {
+            return new ResponseEntity<>(basketOpt.get(), HttpStatus.OK);
+        } 
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/basket")
+    ResponseEntity<Basket> addToBasket(@RequestBody Client client, @RequestBody Product product){
+        return clientService.addToBasket(client, product);
+    }
+
+    @PutMapping("/basket")
+    ResponseEntity<Basket> updateBasket(@RequestBody Client client, @RequestBody Product product){
+        return clientService.updateBasket(client, product);
+    }
+
+    @DeleteMapping("/basket")
+    ResponseEntity<Basket> removeFromBasket(@RequestBody Client client, @RequestBody Product product){
+        return clientService.removeFromBasket(client, product);
+    }
 
 }

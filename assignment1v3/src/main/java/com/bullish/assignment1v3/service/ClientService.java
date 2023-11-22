@@ -15,29 +15,18 @@ import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
-import com.bullish.assignment1v3.repository.ProductRepository;
-import com.bullish.assignment1v3.service.contracts.ConfirmedPurchase.AddableConfirmedPurchaseService;
-import com.bullish.assignment1v3.service.contracts.ConfirmedPurchase.ReadableConfirmedPurchaseService;
-import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
-import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
-import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
-import com.bullish.assignment1v3.service.contracts.basket.UpdatableBasketService;
 import com.bullish.assignment1v3.service.contracts.client.ClientAddableService;
 import com.bullish.assignment1v3.service.contracts.client.ClientDeletableService;
 import com.bullish.assignment1v3.service.contracts.client.ClientReadableService;
 import com.bullish.assignment1v3.service.contracts.client.ClientUpdatableService;
-import com.bullish.assignment1v3.service.contracts.product.ProductReadableService;
-import com.bullish.assignment1v3.service.contracts.product.ProductsReadableService;
+import com.bullish.assignment1v3.service.contracts.client.ClientsReadableService;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class ClientService 
-implements ProductReadableService, 
-BasketReadableService, RemovableFromBasketService, AddableToBasketService, UpdatableBasketService, 
-AddableConfirmedPurchaseService, ReadableConfirmedPurchaseService,
-ClientAddableService, ClientDeletableService, ClientUpdatableService, ClientReadableService,
-ProductsReadableService
+implements ClientAddableService, ClientDeletableService, ClientUpdatableService, ClientReadableService, ClientsReadableService
+
 {
 
     // Client can only view what products exist -> R of CRUD within the Library of PRODUCTS
@@ -48,13 +37,10 @@ ProductsReadableService
     private ClientRepository clientRepository;
 
     @Autowired
-	private ProductRepository productRepository;
-    
-    @Autowired
     private ProductService productService;
 
     @Autowired
-	private BasketRepository basketRepository;
+	private BasketService basketService;
 
     @Autowired 
     private ConfirmedPurchaseRepository confirmedPurchaseRepository;
@@ -100,6 +86,17 @@ ProductsReadableService
     }
 
     @Override
+    public ResponseEntity<List<Client>> readAllClients() {
+        List<Client> clients = clientRepository.findAll();
+
+        if (clients != null && !clients.isEmpty()) {
+            return new ResponseEntity<>(clients, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
     public ResponseEntity<Client> deleteClient(Client client) {
         Optional<Client> clientOpt = readClient(client.getUsername());
 
@@ -113,46 +110,36 @@ ProductsReadableService
     }
 
     // All to do with products
-    @Override
     public Optional<Product> readProduct(String productName) {
         return productService.readProduct(productName);
     }
-
-    @Override
+    
     public ResponseEntity<List<Product>> readAllProducts() {
         return productService.readAllProducts();
     }
 
     
     // All to do with basket
-    @Override
-    public void updateBasket(BasketRepository basketRepository) {// CR_U_D for Basket Table
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateBasket'");
+
+    // CR_U_D for Basket Table
+    public ResponseEntity<Basket> updateBasket(Client client, Product product) {
+        return basketService.addToBasket(client, product);
+    }
+
+    public ResponseEntity<Basket> addToBasket(Client client, Product product) {// _C_RUD for Basket Table
+        return basketService.addToBasket(client, product);
+    }
+
+    public ResponseEntity<Basket> removeFromBasket(Client client, Product product) {// CRU_D_ for Basket Table
+        return basketService.removeFromBasket(client, product);
     }
 
 
-    @Override
-    public void addToBasket(Product product) {// _C_RUD for Basket Table
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addToBasket'");
-    }
-
-    @Override
-    public void removeFromBasket(BasketRepository basketRepository) {// CRU_D_ for Basket Table
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeFromBasket'");
+    public Optional<Basket> readBasket(String clientUsername) { // C_R_UD for Basket Table
+        return basketService.readBasket(clientUsername);
     }
 
 
-    @Override
-    public Basket readBasket(BasketRepository basketRepository) { // C_R_UD for Basket Table
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readBasket'");
-    }
-
-
-    @Override
     public ConfirmedPurchaseRepository readConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) { 
         // C_R_UD for Basket Table
 
@@ -160,8 +147,6 @@ ProductsReadableService
         throw new UnsupportedOperationException("Unimplemented method 'readConfirmedPurchase'");
     }
 
-
-    @Override
     public void addConfirmedPurchase(ConfirmedPurchaseRepository confirmedPurchaseRepository) {
         // _C_RUD for Basket Table
         // First: Check if Product is a non zero count in the products table, else abort the method

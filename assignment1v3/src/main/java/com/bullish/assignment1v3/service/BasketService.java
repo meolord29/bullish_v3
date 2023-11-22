@@ -7,11 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.bullish.assignment1v3.model.store.Basket;
+import com.bullish.assignment1v3.model.store.Product;
+import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.BasketRepository;
+import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
+import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
+import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
 
 import jakarta.transaction.Transactional;
 
-public class BasketService {
+public class BasketService implements
+BasketReadableService, RemovableFromBasketService, AddableToBasketService{
 
     private BasketRepository basketRepository;
 
@@ -20,7 +26,7 @@ public class BasketService {
     }
 
     @Transactional
-    public ResponseEntity<Basket> updateBasket(Basket basketUpdated) {
+    private ResponseEntity<Basket> updateBasket(Basket basketUpdated) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
 
@@ -36,54 +42,35 @@ public class BasketService {
         }
     }
 
-    public ResponseEntity<Basket> readBasketGetCertainProduct(String clientUsername, String productName) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setSkipNullEnabled(true);
-
-
-        Optional<Basket> basketOpt = basketRepository.findByUsername(clientUsername);
-
-        if (basketOpt.isPresent()) {
-
-            Optional<Basket> basketCertainProductOpt = basketRepository.findByUsernameAndProductName(basketOpt.get().getUsername(), productName);
-            
-            if (basketCertainProductOpt.isPresent()) {
-                Basket basket = basketCertainProductOpt.get();
-                return new ResponseEntity<>(basket, HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } 
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-    }
-
+    @Override
     public Optional<Basket> readBasket(String clientUsername) {
-        Optional<Basket> basketOpt = basketRepository.findByUsername(clientUsername);
-        return basketOpt;
+        return basketRepository.findByUsername(clientUsername);
     }
 
+    @Override
     @Transactional
-    public ResponseEntity<Basket> addBasket(Basket basket) {
-        Optional<Basket> basketOpt = readBasket(basket.getUsername());
+    public ResponseEntity<Basket> addToBasket(Client client, Product product) {
 
-        if (basketOpt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(client.getUsername(), product.getName());
+
+        if (basketProductOpt.isPresent()) {
+            Basket basketUpdated = new Basket(client.getUsername(), product.getName(), basketProductOpt.get().getTotalSelected()+product.getTotal());
+            return updateBasket(basketUpdated);
+
         } else {
-            basketRepository.save(basket);
-            return new ResponseEntity<>(basket, HttpStatus.CREATED);
+            Basket newBasket = new Basket(client.getUsername(), product.getName(), product.getTotal());
+            basketRepository.save(newBasket);
+            return new ResponseEntity<>(newBasket, HttpStatus.CREATED);
         }
     }
 
-    public ResponseEntity<Basket> deleteBasket(Basket basket) {
-        Optional<Basket> basketOpt = readBasket(basket.getUsername());
+    @Override
+    public ResponseEntity<Basket> removeFromBasket(Client client, Product product) {
+        Optional<Basket> basketProductOpt = basketRepository.findByUsernameAndProductName(client.getUsername(), product.getName());
 
-        if (basketOpt.isPresent()) {
-            basketRepository.delete(basketOpt.get());
-            return new ResponseEntity<>(basketOpt.get(), HttpStatus.OK);
+        if (basketProductOpt.isPresent()) {
+            basketRepository.delete(basketProductOpt.get());
+            return new ResponseEntity<>(basketProductOpt.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

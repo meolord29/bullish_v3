@@ -27,14 +27,14 @@ public abstract class AbstractItem {
     @Column(name="discount")
     private Float discount;
 
-    @Column(name="totalAvailable")
-    private Integer totalAvailable;
+    @Column(name="total")
+    private Integer total;
     
-    public AbstractItem(String name, Float price, Float discount, Integer totalAvailable){
+    public AbstractItem(String name, Float price, Float discount, Integer total){
         this.name = name;
         this.price = price;
         this.discount = discount;
-        this.totalAvailable = totalAvailable;
+        this.total = total;
     }
 
     public AbstractItem(){

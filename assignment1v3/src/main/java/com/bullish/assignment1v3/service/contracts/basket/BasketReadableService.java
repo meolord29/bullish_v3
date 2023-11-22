@@ -5,6 +5,6 @@ import com.bullish.assignment1v3.repository.BasketRepository;
 
 public interface BasketReadableService {
 
-    public Basket readBasket(BasketRepository basketRepository);
+    public Optional<Basket> readBasket(String clientUsername);
 
 }

@@ -50,7 +50,7 @@ ClientReadableService, ClientsReadableService
     private ProductRepository productRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     // CRUD METHODS - Admin is able to do all of the CRUD methods within the system
 
@@ -151,21 +151,13 @@ ClientReadableService, ClientsReadableService
     @Override
     public Optional<Client> readClient(String username) {
 
-        Optional<Client> clientOpt = clientRepository.findByUsername(username);
-
-        return clientOpt;
+        return clientService.readClient(username);
 
     }
 
     @Override
     public ResponseEntity<List<Client>> readAllClients() {
-        List<Client> clients = clientRepository.findAll();
-
-        if (clients != null && !clients.isEmpty()) {
-            return new ResponseEntity<>(clients, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return clientService.readAllClients();
     }
 
     
