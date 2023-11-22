@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bullish.assignment1v3.model.store.Basket;
+import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.service.ClientService;
@@ -99,7 +100,7 @@ public class ClientController {
     }
 
     @GetMapping("/basket/{username}/priceTotal")
-    ResponseEntity<Double> getTotalPrice(@RequestBody String username){
+    ResponseEntity<PriceOutput> getTotalPrice(@PathVariable String username){
         return clientService.getTotalPrice(username);
     }
 

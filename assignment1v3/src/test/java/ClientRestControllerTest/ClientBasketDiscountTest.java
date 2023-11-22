@@ -1,6 +1,7 @@
 package ClientRestControllerTest;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,20 +49,15 @@ public class ClientBasketDiscountTest {
     @DirtiesContext
     void testDiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce() {
         // Arrange
-        productRepository.save(new Product("product1", 100d, 0.1d, 10));
-        productRepository.save(new Product("product1", 100d, 0.1d, 10));
-        clientRepository.save(new Client("client", "password123"));
-        basketRepository.save(new Basket("client", "product1", 10));
-        basketRepository.save(new Basket("client", "product2", 20));
-
 
         // Act and Assert
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/basket/client/priceTotal")
+        .get("client_access/basket/client8/priceTotal")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("Double", is(2));
+        .body("username", equalTo("client8"))
+        .body("priceTotal", equalTo(855f));
     }
 }

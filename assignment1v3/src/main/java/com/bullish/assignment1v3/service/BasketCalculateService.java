@@ -31,10 +31,19 @@ public class BasketCalculateService implements BasketSumCalculatable{
         ConcurrentHashMap<String, ConcurrentHashMap<String, Double>> basketHashMap = 
         new ConcurrentHashMap<String, ConcurrentHashMap<String, Double>>();
 
+        Double price = 0d;
         for(Basket basketItem : basket){
             String productName = basketItem.getProductName();
             Double total = 0d + basketItem.getTotal();
-            Double price = productService.readProduct(basketItem.getProductName()).get().getPrice();
+
+            double individual_discount = productService.readProduct(basketItem.getProductName()).get().getDiscount();
+
+            if (individual_discount != 0){
+                price = productService.readProduct(basketItem.getProductName()).get().getPrice() * (1-individual_discount);
+            }
+            else{
+                price = productService.readProduct(basketItem.getProductName()).get().getPrice();
+            }
             ConcurrentHashMap<String, Double> productInformation = new ConcurrentHashMap<String, Double>();
 
             productInformation.put("total", total);
@@ -47,9 +56,21 @@ public class BasketCalculateService implements BasketSumCalculatable{
 
     private Double calculateBasketSumOwed(List<Basket> basket){
         Double totalSum = 0d;
+
+
         for(Basket basketItem : basket){
             Product product = productService.readProduct(basketItem.getProductName()).get();
-            totalSum += product.getPrice() * basketItem.getTotal();
+
+            double individual_discount = product.getDiscount();
+
+            if (individual_discount != 0){
+                totalSum += productService.readProduct(basketItem.getProductName()).get().getPrice() * (1-individual_discount) * basketItem.getTotal();;
+            }
+            else{
+                totalSum += productService.readProduct(basketItem.getProductName()).get().getPrice() * basketItem.getTotal();
+            }
+
+            //totalSum += product.getPrice() * basketItem.getTotal();
         }
         return totalSum;
     }
@@ -69,7 +90,6 @@ public class BasketCalculateService implements BasketSumCalculatable{
 
     @Override
     public Double calculateBasketSum(List<Basket> basket) {
-        
         return calculateBasketSumOwed(basket) - calculateDiscounted(basket);
 
     }

@@ -24,6 +24,13 @@ public class LoadDatabase {
             clientRepository.save(new Client("client1", "password123"));
             basketRepository.save(new Basket("client1", "product1", 10));
             basketRepository.save(new Basket("client1", "product2", 20));
+
+            
+            productRepository.save(new Product("product7", 100d, 0.1d, 10));
+            productRepository.save(new Product("product8", 500d, 0.1d, 10));
+            clientRepository.save(new Client("client8", "password123"));
+            basketRepository.save(new Basket("client8", "product7", 1));
+            basketRepository.save(new Basket("client8", "product8", 2));
         };
     }
 }

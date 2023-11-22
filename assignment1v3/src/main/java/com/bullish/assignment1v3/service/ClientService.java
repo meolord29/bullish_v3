@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
+import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.ClientRepository;
@@ -134,7 +135,7 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         return basketService.readBasketAll(clientUsername);
     }
 
-    public ResponseEntity<Double> getTotalPrice(String clientUsername){
+    public ResponseEntity<PriceOutput> getTotalPrice(String clientUsername){
         return basketService.getTotalPrice(clientUsername);
     }
 

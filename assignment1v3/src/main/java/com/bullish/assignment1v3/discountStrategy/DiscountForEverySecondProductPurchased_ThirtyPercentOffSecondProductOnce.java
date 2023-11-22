@@ -12,7 +12,7 @@ public class DiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProduc
 
         Double discount = 0d;
         for (Map.Entry<String, ConcurrentHashMap<String, Double>> set : basketHashMap.entrySet()) {
-            if (set.getValue().get("total") > 1){
+            if (set.getValue().get("total") >= 2){
                 discount += set.getValue().get("price")*0.3;
             }
         }
