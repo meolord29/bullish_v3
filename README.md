@@ -4,7 +4,7 @@ Run Application: mvn spring-boot:run
 
 Test Application: mvn test
 
-# ADMIN REST API Contracts
+# __ADMIN REST API Contracts__
 
 ## Admin Operations
 ### Get All Admins
@@ -126,7 +126,7 @@ Test Application: mvn test
         Status: 200 OK if product removed, 404 NOT FOUND otherwise
         Body: Removed Product object
 
-# CLIENT REST API Contracts
+# __CLIENT REST API Contracts__
 
 ## Client Operations
 ### Get Client by Username
