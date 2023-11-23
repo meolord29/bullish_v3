@@ -6,7 +6,7 @@ Test Application: mvn test
 
 
 ## Admin Operations
-Get All Admins
+### Get All Admins
 
     Request:
         Method: GET
@@ -15,7 +15,7 @@ Get All Admins
         Status: 200 OK
         Body: List of Admin objects
 
-Get Admin by Username
+### Get Admin by Username
 
     Request:
         Method: GET
@@ -25,7 +25,7 @@ Get Admin by Username
         Status: 200 OK if admin found, 404 NOT FOUND otherwise
         Body: Admin object
 
-Create Admin
+### Create Admin
 
     Request:
         Method: POST
