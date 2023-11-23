@@ -67,8 +67,7 @@ ClientReadableService, ClientsReadableService
     // Read a product by name
     @Override
     public Optional<Product> readProduct(String productName) {
-        Optional<Product> productOpt = productRepository.findByName(productName);
-        return productOpt;
+        return productService.readProduct(productName);
     }
 
     // Read all products
