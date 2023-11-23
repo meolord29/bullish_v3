@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
@@ -16,7 +15,6 @@ import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.model.utility.PriceOutput;
 import com.bullish.assignment1v3.repository.ClientRepository;
-import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 import com.bullish.assignment1v3.service.contracts.client.ClientAddableService;
 import com.bullish.assignment1v3.service.contracts.client.ClientDeletableService;
 import com.bullish.assignment1v3.service.contracts.client.ClientReadableService;

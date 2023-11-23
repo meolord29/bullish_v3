@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
-import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 import com.bullish.assignment1v3.service.contracts.ConfirmedPurchase.AddableConfirmedPurchaseService;
 import com.bullish.assignment1v3.service.contracts.ConfirmedPurchase.ReadableAllConfirmedPurchaseService;
