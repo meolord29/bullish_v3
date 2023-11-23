@@ -16,6 +16,7 @@ import com.bullish.assignment1v3.repository.BasketRepository;
 import com.bullish.assignment1v3.service.contracts.basket.AddableToBasketService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketAllReadableService;
 import com.bullish.assignment1v3.service.contracts.basket.BasketReadableService;
+import com.bullish.assignment1v3.service.contracts.basket.BasketsReadableByProductName;
 import com.bullish.assignment1v3.service.contracts.basket.RemovableFromBasketService;
 
 import jakarta.transaction.Transactional;
@@ -125,7 +126,8 @@ BasketAllReadableService, RemovableFromBasketService, AddableToBasketService, Ba
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    public ResponseEntity<PriceOutput> getTotalPrice(String username){
+    
+    public ResponseEntity<PriceOutput> getBasketTotalPrice(String username){
 
         PriceOutput priceOutput = new PriceOutput();
 

@@ -23,8 +23,16 @@ AddableConfirmedPurchaseService, ReadableAllConfirmedPurchaseService, ReadableCo
 
     private ConfirmedPurchaseRepository confirmedPurchaseRepository;
 
+    @Autowired
+    private BasketService basketService;
+
     public ConfirmedPurchaseService(ConfirmedPurchaseRepository confirmedPurchaseRepository) {
         this.confirmedPurchaseRepository = confirmedPurchaseRepository;
+    }
+
+    @Override
+    public Optional<ConfirmedPurchase> readConfirmedPurchase(ConfirmedPurchase confirmedPurchaseUpdated) {
+        return confirmedPurchaseRepository.findByUsernameAndProductName(confirmedPurchaseUpdated.getUsername(), confirmedPurchaseUpdated.getProductName());
     }
 
     @Override
@@ -46,9 +54,16 @@ AddableConfirmedPurchaseService, ReadableAllConfirmedPurchaseService, ReadableCo
         if (confirmedPurchaseOpt.isPresent()) {
             ConfirmedPurchase confirmedPurchaseUpdated = confirmedPurchaseOpt.get();
 
+            basketService.removeFromBasket(
+                new Basket(
+                    confirmedPurchaseUpdated.getUsername(), 
+                    confirmedPurchaseUpdated.getProductName(), 
+                    confirmedPurchaseUpdated.getTotal()));
+
             confirmedPurchaseUpdated.setTotal(confirmedPurchaseUpdated.getTotal()+confirmedPurchase.getTotal());
 
             return updateConfirmedPurchase(confirmedPurchase);
+
 
         } 
         else {
@@ -59,10 +74,17 @@ AddableConfirmedPurchaseService, ReadableAllConfirmedPurchaseService, ReadableCo
             newConfirmedPurchase.setProductName(confirmedPurchase.getProductName()); 
             confirmedPurchaseRepository.save(newConfirmedPurchase);
 
+            basketService.removeFromBasket(
+                new Basket(
+                    newConfirmedPurchase.getUsername(), 
+                    newConfirmedPurchase.getProductName(), 
+                    newConfirmedPurchase.getTotal()));
+
             return new ResponseEntity<>(newConfirmedPurchase, HttpStatus.CREATED);
         }
-    }
 
+
+    }
 
     @Transactional
     private ResponseEntity<ConfirmedPurchase> updateConfirmedPurchase(ConfirmedPurchase confirmedPurchaseUpdated) {
@@ -81,8 +103,5 @@ AddableConfirmedPurchaseService, ReadableAllConfirmedPurchaseService, ReadableCo
         }
     }
     
-    @Override
-    public Optional<ConfirmedPurchase> readConfirmedPurchase(ConfirmedPurchase confirmedPurchaseUpdated) {
-        return confirmedPurchaseRepository.findByUsernameAndProductName(confirmedPurchaseUpdated.getUsername(), confirmedPurchaseUpdated.getProductName());
-    }
+    
 }

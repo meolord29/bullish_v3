@@ -29,7 +29,7 @@ public class LoadDatabase {
             productRepository.save(new Product("product7", 100d, 0.1d, 10));
             productRepository.save(new Product("product8", 500d, 0.1d, 10));
             clientRepository.save(new Client("client8", "password123"));
-            basketRepository.save(new Basket("client8", "product7", 1));
+            basketRepository.save(new Basket("client8", "product7", 2));
             basketRepository.save(new Basket("client8", "product8", 2));
         };
     }

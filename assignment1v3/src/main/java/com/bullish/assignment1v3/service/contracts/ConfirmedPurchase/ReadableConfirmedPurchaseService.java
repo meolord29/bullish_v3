@@ -1,4 +1,4 @@
-package com.bullish.assignment1v3.service;
+package com.bullish.assignment1v3.service.contracts.ConfirmedPurchase;
 
 import java.util.Optional;
 

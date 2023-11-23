@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bullish.assignment1v3.model.store.Basket;
+import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
 import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
@@ -100,8 +101,15 @@ public class ClientController {
     }
 
     @GetMapping("/basket/{username}/priceTotal")
-    ResponseEntity<PriceOutput> getTotalPrice(@PathVariable String username){
-        return clientService.getTotalPrice(username);
+    ResponseEntity<PriceOutput> getBasketTotalPrice(@PathVariable String username){
+        return clientService.getBasketTotalPrice(username);
+    }
+
+    // All to do with ConfirmedPurchase
+
+    @GetMapping("/confirmedPurchase/client8/all")
+    ResponseEntity<ConfirmedPurchase> addToConfirmedPurchase(@RequestBody ConfirmedPurchase confirmedPurchase){
+        return clientService.addToConfirmedPurchase(confirmedPurchase);
     }
 
 }

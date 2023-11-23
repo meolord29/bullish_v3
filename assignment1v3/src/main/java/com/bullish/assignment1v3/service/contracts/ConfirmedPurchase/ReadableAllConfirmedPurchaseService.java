@@ -8,8 +8,8 @@ import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 
-public interface ReadableConfirmedPurchaseService {
+public interface ReadableAllConfirmedPurchaseService {
 
-    public ResponseEntity<List<ConfirmedPurchase>> readConfirmedPurchase(String clientUsername);
+    public ResponseEntity<List<ConfirmedPurchase>> readAllConfirmedPurchase(String clientUsername);
 
 }

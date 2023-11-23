@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bullish.assignment1v3.model.store.Basket;
+import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
 import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
@@ -41,6 +43,9 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
 
     @Autowired
 	private BasketService basketService;
+
+    @Autowired
+    private ConfirmedPurchaseService confirmedPurchaseService;
 
 
     // CLIENT CRUD SERVICES
@@ -138,15 +143,15 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         return basketService.readBasketAll(clientUsername);
     }
     // getting price for the basket total including the discounts
-    public ResponseEntity<PriceOutput> getTotalPrice(String clientUsername){
-        return basketService.getTotalPrice(clientUsername);
+    public ResponseEntity<PriceOutput> getBasketTotalPrice(String clientUsername){
+        return basketService.getBasketTotalPrice(clientUsername);
     }
 
     // All actions to do with ConfirmedPurchases
 
-
-
+    public ResponseEntity<ConfirmedPurchase> addToConfirmedPurchase(ConfirmedPurchase confirmedPurchase){
+        return confirmedPurchaseService.addConfirmedPurchase(confirmedPurchase);
     
+    }
 
-    
 }
