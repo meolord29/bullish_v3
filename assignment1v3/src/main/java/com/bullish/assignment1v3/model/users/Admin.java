@@ -14,7 +14,6 @@ public class Admin extends AbstractUser{
     @Autowired
     public Admin(String username, String password) {
         super(username, password);
-        //TODO Auto-generated constructor stub
     }
     
     @Autowired
