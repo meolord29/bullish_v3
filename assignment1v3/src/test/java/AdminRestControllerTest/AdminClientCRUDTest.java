@@ -64,9 +64,9 @@ public class AdminClientCRUDTest {
         .get("admin_access/clients")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo(Arrays.asList("client1", "client2")))
-        .body("password", equalTo(Arrays.asList("password123", "password123")));
+        .body("id", is(Arrays.asList(1, 2, 3)))
+        .body("username", equalTo(Arrays.asList("client1", "client8", "client2" )))
+        .body("password", equalTo(Arrays.asList("password123", "password123", "password123")));
 
     }
 

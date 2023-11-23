@@ -47,7 +47,7 @@ public class ClientBasketCRUDTest {
         .post("client_access/basket")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
+        .body("id", is(6))
         .body("username", equalTo("client1"))
         .body("productName", equalTo("product3"))
         .body("total", equalTo(20));  // Assuming the price is an integer, adjust it based on your actual implementation

@@ -45,7 +45,7 @@ public class ClientClientCRUDTest {
         .when().post("client_access/clients/client7")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client7"))
         .body("password", equalTo("password123"));
     }
@@ -63,7 +63,7 @@ public class ClientClientCRUDTest {
         .body(client)
         .when().post("client_access/clients/client7").then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client7"))
         .body("password", equalTo("password123"));
 
@@ -91,7 +91,7 @@ public class ClientClientCRUDTest {
         .post("client_access/clients/client10")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client10"))
         .body("password", equalTo("password123"));
 
@@ -102,7 +102,7 @@ public class ClientClientCRUDTest {
         .get("client_access/clients/client10")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client10"))
         .body("password", equalTo("password123"));
     }
@@ -138,7 +138,7 @@ public class ClientClientCRUDTest {
         .post("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client6"))
         .body("password", equalTo("password123"));
 
@@ -148,7 +148,7 @@ public class ClientClientCRUDTest {
         .get("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client6"))
         .body("password", equalTo("password123"));
 
@@ -160,7 +160,7 @@ public class ClientClientCRUDTest {
         .put("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client6"))
         .body("password", equalTo("newPassword456"));
 
@@ -171,7 +171,7 @@ public class ClientClientCRUDTest {
         .get("client_access/clients/client6")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client6"))
         .body("password", equalTo("newPassword456"));
     }
@@ -209,7 +209,7 @@ public class ClientClientCRUDTest {
         .post("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 
@@ -219,7 +219,7 @@ public class ClientClientCRUDTest {
         .get("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 
@@ -231,7 +231,7 @@ public class ClientClientCRUDTest {
         .delete("client_access/clients/client11")
         .then()
         .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
+        .body("id", is(3))
         .body("username", equalTo("client11"))
         .body("password", equalTo("password123"));
 

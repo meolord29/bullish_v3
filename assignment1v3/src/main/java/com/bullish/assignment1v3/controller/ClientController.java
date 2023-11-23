@@ -17,99 +17,123 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
-import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
+import com.bullish.assignment1v3.model.utility.PriceOutput;
 import com.bullish.assignment1v3.service.ClientService;
 
 @RestController
 @RequestMapping("/client_access")
 public class ClientController {
 
+    // Autowired ClientService for business logic operations
     @Autowired
     private ClientService clientService;
 
+    // Constructor to inject dependencies
     ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
-    // All to do with clients
+    // Client related operations
+
+    // Get a specific client by username
     @GetMapping("/clients/{username}")
     ResponseEntity<Client> getClient(@PathVariable String username){
-        Optional<Client> clientOPt = clientService.readClient(username);
+        Optional<Client> clientOpt = clientService.readClient(username);
 
-        if (clientOPt.isPresent()) {
-            return new ResponseEntity<>(clientOPt.get(), HttpStatus.OK);
+        if (clientOpt.isPresent()) {
+            // If client found, return with OK status
+            return new ResponseEntity<>(clientOpt.get(), HttpStatus.OK);
         } else {
+            // If client not found, return with NOT_FOUND status
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Create a new client
     @PostMapping("/clients/{client}")
     ResponseEntity<Client> createClient(@RequestBody Client client){
         return clientService.addClient(client);
     }
 
+    // Update an existing client
     @PutMapping("/clients/{client}")
     ResponseEntity<Client> updateClient(@RequestBody Client client){
         return clientService.updateClient(client);
     }
 
-
+    // Remove a client
     @DeleteMapping("/clients/{client}")
     ResponseEntity<Client> removeClient(@RequestBody Client client){
         return clientService.deleteClient(client);
     }
-    
 
+    // Product related operations
+
+    // Get all products
     @GetMapping("/products")
     ResponseEntity<List<Product>> getAllProducts(){
         return clientService.readAllProducts();
     }
 
+    // Get a specific product by name
     @GetMapping("/products/{name}")
     ResponseEntity<Product> getProduct(@PathVariable String name){
         Optional<Product> productOpt = clientService.readProduct(name);
 
         if (productOpt.isPresent()) {
+            // If product found, return with OK status
             return new ResponseEntity<>(productOpt.get(), HttpStatus.OK);
         } else {
+            // If product not found, return with NOT_FOUND status
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Basket related operations
 
-    // All to do with basket
+    // Get all baskets for a specific client
     @GetMapping("/basket/{username}/all")
     ResponseEntity<List<Basket>> getBasket(@PathVariable String username){
         return clientService.getBasket(username);
     }
 
+    // Add a new item to the basket
     @PostMapping("/basket")
     ResponseEntity<Basket> addToBasket(@RequestBody Basket basket){
         return clientService.addToBasket(basket);
     }
 
+    // Update the basket
     @PutMapping("/basket")
     ResponseEntity<Basket> updateBasket(@RequestBody Basket basket){
         return clientService.updateBasket(basket);
     }
 
+    // Remove an item from the basket
     @DeleteMapping("/basket")
     ResponseEntity<Basket> removeFromBasket(@RequestBody Basket basket){
         return clientService.removeFromBasket(basket);
     }
 
+    // Get the total price of the basket
     @GetMapping("/basket/{username}/priceTotal")
     ResponseEntity<PriceOutput> getBasketTotalPrice(@PathVariable String username){
         return clientService.getBasketTotalPrice(username);
     }
 
-    // All to do with ConfirmedPurchase
+    // ConfirmedPurchase related operations
 
-    @GetMapping("/confirmedPurchase/client8/all")
+    // Add a confirmed purchase
+    @PostMapping("/confirmedPurchase/{username}")
     ResponseEntity<ConfirmedPurchase> addToConfirmedPurchase(@RequestBody ConfirmedPurchase confirmedPurchase){
         return clientService.addToConfirmedPurchase(confirmedPurchase);
     }
 
+    // Get all confirmed purchases for a specific client
+    @GetMapping("/confirmedPurchase/{username}/all")
+    ResponseEntity<List<ConfirmedPurchase>> ReadAllConfirmedPurchase(@PathVariable String username){
+        return clientService.ReadAllConfirmedPurchase(username);
+    }
 }

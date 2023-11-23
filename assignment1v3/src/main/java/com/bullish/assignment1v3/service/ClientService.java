@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bullish.assignment1v3.model.store.Basket;
 import com.bullish.assignment1v3.model.store.ConfirmedPurchase;
-import com.bullish.assignment1v3.model.store.PriceOutput;
 import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Client;
+import com.bullish.assignment1v3.model.utility.PriceOutput;
 import com.bullish.assignment1v3.repository.ClientRepository;
 import com.bullish.assignment1v3.repository.ConfirmedPurchaseRepository;
 import com.bullish.assignment1v3.service.contracts.client.ClientAddableService;
@@ -27,14 +27,9 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ClientService 
-implements ClientAddableService, ClientDeletableService, ClientUpdatableService, ClientReadableService, ClientsReadableService
+implements ClientAddableService, ClientDeletableService, ClientUpdatableService, ClientReadableService, ClientsReadableService {
 
-{
-
-    // Client can only view what products exist -> R of CRUD within the Library of PRODUCTS
-    // Client can fully manage their Basket -> All CRUD Functionalities within the BASKET
-    // Client can buy and review products that are in the basket -> CR of CRUD within the CONFIRMED PURCHASE of the basket
-
+    // Repositories and services injected for database operations
     @Autowired
     private ClientRepository clientRepository;
 
@@ -47,8 +42,9 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
     @Autowired
     private ConfirmedPurchaseService confirmedPurchaseService;
 
-
     // CLIENT CRUD SERVICES
+
+    // Update client information
     @Override
     @Transactional
     public ResponseEntity<Client> updateClient(Client clientUpdated) {
@@ -56,102 +52,123 @@ implements ClientAddableService, ClientDeletableService, ClientUpdatableService,
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setSkipNullEnabled(true);
 
+        // Check if the client exists
         Optional<Client> clientOpt = readClient(clientUpdated.getUsername());
 
         if (clientOpt.isPresent()) {
+            // If client exists, update its fields and save to the database
             Client client = clientOpt.get();
             mapper.map(clientUpdated, client);
             clientRepository.save(client);
             return new ResponseEntity<>(client, HttpStatus.OK);
         } else {
+            // If client not found, return a NOT_FOUND response
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Read client information by username
     @Override
     public Optional<Client> readClient(String clientUsername) {
         Optional<Client> clientOpt = clientRepository.findByUsername(clientUsername);
         return clientOpt;
     }
 
+    // Add a new client
     @Override
     @Transactional
     public ResponseEntity<Client> addClient(Client client) {
         Optional<Client> clientOpt = readClient(client.getUsername());
 
         if (clientOpt.isPresent()) {
+            // If client with the same username already exists, return a BAD_REQUEST response
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
+            // Save the new client
             clientRepository.save(client);
             return new ResponseEntity<>(client, HttpStatus.CREATED);
         }
     }
 
+    // Read all clients
     @Override
     public ResponseEntity<List<Client>> readAllClients() {
         List<Client> clients = clientRepository.findAll();
 
         if (clients != null && !clients.isEmpty()) {
+            // If clients found, return them with an OK status
             return new ResponseEntity<>(clients, HttpStatus.OK);
         } else {
+            // If no clients found, return a NOT_FOUND response
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Delete a client
     @Override
     public ResponseEntity<Client> deleteClient(Client client) {
         Optional<Client> clientOpt = readClient(client.getUsername());
 
         if (clientOpt.isPresent()) {
+            // If client exists, delete it and return with an OK status
             clientRepository.delete(clientOpt.get());
             return new ResponseEntity<>(clientOpt.get(), HttpStatus.OK);
-
         } else {
+            // If client not found, return a NOT_FOUND response
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    // All to do with products
+    // All actions related to products
+
+    // Read a product by name
     public Optional<Product> readProduct(String productName) {
         return productService.readProduct(productName);
     }
     
+    // Read all products
     public ResponseEntity<List<Product>> readAllProducts() {
         return productService.readAllProducts();
     }
 
-    
-    // All to do with basket
+    // All actions related to the basket
 
-    // CR_U_D for Basket Table
+    // Update basket (add or update products in the basket)
     public ResponseEntity<Basket> updateBasket(Basket basket) {
         return basketService.addToBasket(basket);
     }
 
-    // _C_RUD for Basket Table
-    public ResponseEntity<Basket> addToBasket(Basket basket) {// _C_RUD for Basket Table
+    // Add a product to the basket
+    public ResponseEntity<Basket> addToBasket(Basket basket) {
         return basketService.addToBasket(basket);
     }
 
-    // CRU_D_ for Basket Table
-    public ResponseEntity<Basket> removeFromBasket(Basket basket) {// CRU_D_ for Basket Table
+    // Remove a product from the basket
+    public ResponseEntity<Basket> removeFromBasket(Basket basket) {
         return basketService.removeFromBasket(basket);
     }
 
-    // C_R_UD for Basket Table
-    public ResponseEntity<List<Basket>> getBasket(String clientUsername) { // C_R_UD for Basket Table
+    // Get the details of the basket
+    public ResponseEntity<List<Basket>> getBasket(String clientUsername) {
         return basketService.readBasketAll(clientUsername);
     }
-    // getting price for the basket total including the discounts
-    public ResponseEntity<PriceOutput> getBasketTotalPrice(String clientUsername){
+
+    // Get the total price of the basket including discounts
+    public ResponseEntity<PriceOutput> getBasketTotalPrice(String clientUsername) {
         return basketService.getBasketTotalPrice(clientUsername);
     }
 
-    // All actions to do with ConfirmedPurchases
+    // All actions related to confirmed purchases
 
-    public ResponseEntity<ConfirmedPurchase> addToConfirmedPurchase(ConfirmedPurchase confirmedPurchase){
+    // Add a purchase to the confirmed purchases
+    public ResponseEntity<ConfirmedPurchase> addToConfirmedPurchase(ConfirmedPurchase confirmedPurchase) {
         return confirmedPurchaseService.addConfirmedPurchase(confirmedPurchase);
-    
     }
 
+    // Read all confirmed purchases for a client
+    public ResponseEntity<List<ConfirmedPurchase>> ReadAllConfirmedPurchase(String username) {
+        return confirmedPurchaseService.readAllConfirmedPurchase(username);
+    }
 }
+
+

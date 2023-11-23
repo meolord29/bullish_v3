@@ -10,29 +10,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class DiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest {
 
-    public Double getDiscount(ConcurrentHashMap<String, ConcurrentHashMap<String, Double>> basketHashMap)
-        {
+    // Method to calculate discount based on the condition: 10% off on all most priciest products if there are at least three different products
+    public Double getDiscount(ConcurrentHashMap<String, ConcurrentHashMap<String, Double>> basketHashMap) {
         Double discount = 0d;
-        if (basketHashMap.size() >= 5){
-            
-            ArrayList<Double> product_price_list = new ArrayList<Double>();
+
+        // Check if the basket contains at least five different products
+        if (basketHashMap.size() >= 5) {
+
+            // Create a list to store prices of products with a total quantity greater than or equal to 1
+            ArrayList<Double> productPriceList = new ArrayList<Double>();
+
+            // Iterate through each product entry in the basket
             for (Map.Entry<String, ConcurrentHashMap<String, Double>> set : basketHashMap.entrySet()) {
-                if (set.getValue().get("total") >= 1){
-                    product_price_list.add(set.getValue().get("price"));
+                if (set.getValue().get("total") >= 1) {
+                    // Add the price of the product to the list
+                    productPriceList.add(set.getValue().get("price"));
                 }
             }
-            
-            Collections.sort(product_price_list, Collections.reverseOrder()); 
-            
-            for (Double price : product_price_list){
-                discount += price*0.1;
+
+            // Sort the product prices in descending order
+            Collections.sort(productPriceList, Collections.reverseOrder());
+
+            // Calculate the discount by applying a 10% discount on each of the most priciest products
+            for (Double price : productPriceList) {
+                discount += price * 0.1;
             }
 
             return discount;
-
         }
+
         return discount;
-        
-    }   
-    
+    }
 }

@@ -1,4 +1,4 @@
-package com.bullish.assignment1v3.model.store;
+package com.bullish.assignment1v3.model.utility;
 
 import org.springframework.stereotype.Component;
 

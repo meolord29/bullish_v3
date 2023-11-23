@@ -31,7 +31,6 @@ import com.bullish.assignment1v3.service.contracts.product.ProductsReadableServi
 import jakarta.transaction.Transactional;
 
 
-
 @Service
 public class AdminService implements 
 ProductAddableService, ProductReadableService, ProductUpdatableService, ProductDeletableService, ProductsReadableService,
@@ -57,35 +56,43 @@ ClientReadableService, ClientsReadableService
     // CRUD METHODS - Admin is able to do all of the CRUD methods within the system
 
     // PRODUCT CRUD SERVICES
+
+    // Update a product
     @Override
     @Transactional
     public ResponseEntity<Product> updateProduct(Product productUpdated) {
         return productService.updateProduct(productUpdated);
     }
 
+    // Read a product by name
     @Override
     public Optional<Product> readProduct(String productName) {
         Optional<Product> productOpt = productRepository.findByName(productName);
         return productOpt;
     }
 
+    // Read all products
     @Override
     public ResponseEntity<List<Product>> readAllProducts() {
         return productService.readAllProducts();
     }
 
+    // Add a new product
     @Override
     @Transactional
     public ResponseEntity<Product> addProduct(Product product) {
         return productService.addProduct(product);
     }
 
+    // Delete a product
     @Override
     public ResponseEntity<Product> deleteProduct(Product product) {
 
+        // Retrieve all baskets with the specified product
         List<Basket> basketsWithProduct = basketService.readAllBasketsByProductName(product);
 
-        for (Basket basket : basketsWithProduct){ // need to delete the product from people's baskets as well
+        // Remove the product from people's baskets
+        for (Basket basket : basketsWithProduct) {
             clientService.removeFromBasket(basket);
         }
 
@@ -94,12 +101,15 @@ ClientReadableService, ClientsReadableService
 
 
     // ADMIN CRUD SERVICES
+
+    // Read an admin by username
     @Override
     public Optional<Admin> readAdmin(String username) {
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         return adminOpt;
     }
 
+    // Read all admins
     @Override
     public ResponseEntity<List<Admin>> readAllAdmins() {
         List<Admin> admins = adminRepository.findAll();
@@ -111,32 +121,38 @@ ClientReadableService, ClientsReadableService
         }
     }
 
+    // Add a new admin
     @Override
     @Transactional
     public ResponseEntity<Admin> addAdmin(Admin admin) {
         Optional<Admin> adminOpt = readAdmin(admin.getUsername());
 
         if (adminOpt.isPresent()) {
+            // Admin with the same username already exists
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
+            // Save the new admin
             adminRepository.save(admin);
             return new ResponseEntity<>(admin, HttpStatus.CREATED);
         }
     }
 
+    // Delete an admin
     @Override
     public ResponseEntity<Admin> deleteAdmin(Admin admin) {
         Optional<Admin> adminOpt = readAdmin(admin.getUsername());
 
-        if (adminOpt.isPresent() && adminOpt.get().getUsername() != "RootAdmin") {
+        if (adminOpt.isPresent() && !"RootAdmin".equals(adminOpt.get().getUsername())) {
+            // Delete the admin (except for the special "RootAdmin")
             adminRepository.delete(adminOpt.get());
             return new ResponseEntity<>(adminOpt.get(), HttpStatus.OK);
-            
         } else {
+            // Admin not found or trying to delete "RootAdmin"
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    // Update an admin
     @Override
     @Transactional
     public ResponseEntity<Admin> updateAdmin(Admin adminUpdated) {
@@ -147,36 +163,28 @@ ClientReadableService, ClientsReadableService
         Optional<Admin> adminOpt = readAdmin(adminUpdated.getUsername());
 
         if (adminOpt.isPresent()){
+            // Admin found, update the fields
             Admin admin = adminOpt.get();
             mapper.map(adminUpdated, admin);
             adminRepository.save(admin);
             return new ResponseEntity<>(admin, HttpStatus.OK);
-        }
-        else{
+        } else {
+            // Admin not found
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // CLIENT CRUD SERVICES
+
+    // Read a client by username
     @Override
     public Optional<Client> readClient(String username) {
-
         return clientService.readClient(username);
-
     }
 
+    // Read all clients
     @Override
     public ResponseEntity<List<Client>> readAllClients() {
         return clientService.readAllClients();
     }
-
-    
-
-
-
-    
-
-    
-
-    
-    
 }

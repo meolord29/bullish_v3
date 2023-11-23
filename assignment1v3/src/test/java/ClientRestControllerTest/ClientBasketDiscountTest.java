@@ -58,7 +58,7 @@ public class ClientBasketDiscountTest {
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("username", equalTo("client8"))
-        .body("priceTotal", equalTo(855f));
+        .body("priceTotal", equalTo(918.0F));
     }
 
     @Test

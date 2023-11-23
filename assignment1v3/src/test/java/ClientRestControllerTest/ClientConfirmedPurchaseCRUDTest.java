@@ -28,6 +28,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 @AutoConfigureMockMvc
 @DirtiesContext
 public class ClientConfirmedPurchaseCRUDTest {
+
     @Autowired
     private ClientController clientController;
 
@@ -41,27 +42,84 @@ public class ClientConfirmedPurchaseCRUDTest {
     }
 
     @Test
+    @DirtiesContext
     public void testReadConfirmedPurchase(){
-        //clientRepository.save(new Client("client8", "password123"));
-        //basketRepository.save(new Basket("client8", "product7", 2));
-        //basketRepository.save(new Basket("client8", "product8", 2));
-
-        confirmedPurchaseRepository.save(new ConfirmedPurchase("client8", "product8", 2));
         
         // Assert that the returned list contains both product1 and product2
+
         given()
         .contentType("application/json")
         .when()
-        .get("client_access/confirmedPurchase/client8/all")
+        .get("client_access/confirmedPurchase/client44/all")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(Arrays.asList(1)))
+        .body("username", equalTo(Arrays.asList("client44")))
+        .body("productName", equalTo(Arrays.asList("product90" )))
+        .body("total", equalTo(Arrays.asList(2)));
+        }
+
+    @Test
+    @DirtiesContext
+    public void addNewConfirmedPurchase(){
+        
+        // Assert that the returned list contains both product1 and product2
+
+        ConfirmedPurchase newConfirmedPurchase = new ConfirmedPurchase("client44", "product8", 1);
+
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/confirmedPurchase/client44/all")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(Arrays.asList(1)))
+        .body("username", equalTo(Arrays.asList("client44")))
+        .body("productName", equalTo(Arrays.asList("product90" )))
+        .body("total", equalTo(Arrays.asList(2)));
+
+        given()
+        .contentType("application/json")
+        .body(newConfirmedPurchase)
+        .when()
+        .post("client_access/confirmedPurchase/client44")
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .body("id", is(2))
+        .body("username", equalTo("client44"))
+        .body("productName", equalTo("product8" ))
+        .body("total", equalTo(1));
+
+        given()
+        .contentType("application/json")
+        .body(newConfirmedPurchase)
+        .when()
+        .post("client_access/confirmedPurchase/client44")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .body("id", is(2))
+        .body("username", equalTo("client44"))
+        .body("productName", equalTo("product8" ))
+        .body("total", equalTo(1));
+        
+        given()
+        .contentType("application/json")
+        .when()
+        .get("client_access/confirmedPurchase/client44/all")
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo("client8"))
-        .body("productName", equalTo("product8"))
-        .body("total", equalTo(2));
-        }
-
+        .body("username", equalTo(Arrays.asList("client44", "client44")))
+        .body("productName", equalTo(Arrays.asList("product90", "product8" )))
+        .body("total", equalTo(Arrays.asList(2, 1)));
 
     }
+
+
+}
+
+
+
+
 
 
