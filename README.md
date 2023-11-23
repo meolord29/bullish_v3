@@ -4,6 +4,7 @@ Run Application: mvn spring-boot:run
 
 Test Application: mvn test
 
+# ADMIN REST API Contracts
 
 ## Admin Operations
 ### Get All Admins
