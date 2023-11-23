@@ -32,233 +32,238 @@ public class ClientClientCRUDTest {
         RestAssuredMockMvc.standaloneSetup(clientController);
     }
 
-    // _C_RUD for Client #1
+    // Test Cases for Client CRUD Operations
+
+    // Test adding a new client - positive case
     @Test
     @DirtiesContext
     void testAddClientReturnClient() {
         // Arrange
         Client client = new Client("client7", "password123");
 
+        // Act and Assert
         given()
-        .contentType("application/json")
-        .body(client)
-        .when().post("client_access/clients/client7")
+            .contentType("application/json")
+            .body(client)
+        .when()
+            .post("client_access/clients/client7")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
-        .body("username", equalTo("client7"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(3))
+            .body("username", equalTo("client7"))
+            .body("password", equalTo("password123"));
     }
 
-    // _C_RUD for Client #2
+    // Test adding a client that already exists - negative case
     @Test
     @DirtiesContext
     void testAddClientReturnClientAlreadyExist() {
-
         // Arrange
         Client client = new Client("client7", "password123");
 
+        // Act
         given()
-        .contentType("application/json")
-        .body(client)
-        .when().post("client_access/clients/client7").then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
-        .body("username", equalTo("client7"))
-        .body("password", equalTo("password123"));
-
-        // Act and Assert
-        given()
-        .contentType("application/json")
-        .body(client)
+            .contentType("application/json")
+            .body(client)
         .when()
-        .post("client_access/clients/client7")
+            .post("client_access/clients/client7")
+        .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(3))
+            .body("username", equalTo("client7"))
+            .body("password", equalTo("password123"));
+
+        // Assert
+        given()
+            .contentType("application/json")
+            .body(client)
+        .when()
+            .post("client_access/clients/client7")
         .then()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    // C_R_UD for Client #1
+    // Test reading an existing client - positive case
     @Test
     @DirtiesContext
     void testReadClientReturnClient() {
         // Arrange
         Client client = new Client("client10", "password123");
 
+        // Act
         given()
-        .contentType("application/json")
-        .body(client)
+            .contentType("application/json")
+            .body(client)
         .when()
-        .post("client_access/clients/client10")
+            .post("client_access/clients/client10")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
-        .body("username", equalTo("client10"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(3))
+            .body("username", equalTo("client10"))
+            .body("password", equalTo("password123"));
 
-        // Act and Assert
+        // Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client10")
+            .get("client_access/clients/client10")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client10"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client10"))
+            .body("password", equalTo("password123"));
     }
 
-    // C_R_UD for Client #2
+    // Test reading a client that doesn't exist - negative case
     @Test
     @DirtiesContext
     void testReadClientReturnNoClientExist() {
-
-        // Act and Assert
+        // Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client10")
+            .get("client_access/clients/client10")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    // CR_U_D for Client #1
+    // Test updating an existing client - positive case
     @Test
     @DirtiesContext
     void testUpdateClientReturnClient() {
-
+        // Arrange
         Client clientInit = new Client("client6", "password123");
-
         Client clientUpdated = new Client("client6", "newPassword456");
 
-        // Arrange0
+        // Act
         given()
-        .contentType("application/json")
-        .body(clientInit)
+            .contentType("application/json")
+            .body(clientInit)
         .when()
-        .post("client_access/clients/client6")
+            .post("client_access/clients/client6")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
-        .body("username", equalTo("client6"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(3))
+            .body("username", equalTo("client6"))
+            .body("password", equalTo("password123"));
 
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client6")
+            .get("client_access/clients/client6")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client6"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client6"))
+            .body("password", equalTo("password123"));
 
-        // Act and Assert - Updating the client
+        // Assert
         given()
-        .contentType("application/json")
-        .body(clientUpdated)
+            .contentType("application/json")
+            .body(clientUpdated)
         .when()
-        .put("client_access/clients/client6")
+            .put("client_access/clients/client6")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client6"))
-        .body("password", equalTo("newPassword456"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client6"))
+            .body("password", equalTo("newPassword456"));
 
-        // checking that the client was updated by requesting the updated client and checking it against the expected attributes
+        // Checking that the client was updated by requesting the updated client and checking it against the expected attributes
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client6")
+            .get("client_access/clients/client6")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client6"))
-        .body("password", equalTo("newPassword456"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client6"))
+            .body("password", equalTo("newPassword456"));
     }
 
-    // CR_U_D for Client #2
+    // Test updating a client that doesn't exist - negative case
     @Test
     @DirtiesContext
     void testUpdateClientReturnNoClientExist() {
-
         // Arrange
         Client clientUpdated = new Client("client1", "newPassword456");
 
-        // Act and Assert - Updating the client
+        // Act and Assert
         given()
-        .contentType("application/json")
-        .body(clientUpdated)
+            .contentType("application/json")
+            .body(clientUpdated)
         .when()
-        .put("client_access/clients/client1")
+            .put("client_access/clients/client1")
         .then()
-        .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.OK.value());
     }
 
-    // CRU_D_ for Client #1
+    // Test deleting an existing client - positive case
     @Test
     @DirtiesContext
     void testDeleteClientReturnClient() {
-
+        // Arrange
         Client clientInit = new Client("client11", "password123");
 
-        // Arrange
+        // Act
         given()
-        .contentType("application/json")
-        .body(clientInit)
+            .contentType("application/json")
+            .body(clientInit)
         .when()
-        .post("client_access/clients/client11")
+            .post("client_access/clients/client11")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(3))
-        .body("username", equalTo("client11"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(3))
+            .body("username", equalTo("client11"))
+            .body("password", equalTo("password123"));
 
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client11")
+            .get("client_access/clients/client11")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client11"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client11"))
+            .body("password", equalTo("password123"));
 
-        // Act and Assert - Updating the client
+        // Assert
         given()
-        .contentType("application/json")
-        .body(clientInit)
+            .contentType("application/json")
+            .body(clientInit)
         .when()
-        .delete("client_access/clients/client11")
+            .delete("client_access/clients/client11")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(3))
-        .body("username", equalTo("client11"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(3))
+            .body("username", equalTo("client11"))
+            .body("password", equalTo("password123"));
 
-        // checking that the client was deleted by trying to request the deleted client
+        // Checking that the client was deleted by trying to request the deleted client
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/clients/client11")
+            .get("client_access/clients/client11")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    // CRU_D_ for Client #2
+    // Test deleting a client that doesn't exist - negative case
     @Test
     @DirtiesContext
-    void testDeleteClientReturnBadRequest(){
+    void testDeleteClientReturnBadRequest() {
         // Arrange
         Client clientInit = new Client("client50", "password123");
 
-        // Act and Assert - Updating the client
+        // Act and Assert
         given()
-        .contentType("application/json")
-        .body(clientInit)
+            .contentType("application/json")
+            .body(clientInit)
         .when()
-        .delete("client_access/clients/client50")
+            .delete("client_access/clients/client50")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
+
 

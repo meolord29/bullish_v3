@@ -2,7 +2,6 @@ package ClientRestControllerTest;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,27 +44,32 @@ public class ClientBasketDiscountTest {
         RestAssuredMockMvc.standaloneSetup(clientController);
     }
 
+    // Test Cases for Client Basket Discounts
+
+    // Test discount for every second product purchased - 30% off the second product once
     @Test
     @DirtiesContext
     void testDiscountForEverySecondProductPurchased_ThirtyPercentOffSecondProductOnce() {
         // Arrange
+        // Ensure the client 'client8' has baskets with products for this test case
 
         // Act and Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/basket/client8/priceTotal")
+            .get("client_access/basket/client8/priceTotal")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("username", equalTo("client8"))
-        .body("priceTotal", equalTo(918.0F));
+            .statusCode(HttpStatus.OK.value())
+            .body("username", equalTo("client8"))
+            .body("priceTotal", equalTo(918.0F));
     }
 
+    // Test discount for having three different products - 10% off the most priciest product
     @Test
     @DirtiesContext
     void testDiscountForHavingThreeDifferentProducts_TenPercentOffAllMostPriciest() {
         // Arrange
-        
+        // Save new products and a client with baskets for this test case
         productRepository.save(new Product("product10", 100d, 0.0d, 10));
         productRepository.save(new Product("product11", 100d, 0.0d, 10));
         productRepository.save(new Product("product12", 100d, 0.0d, 10));
@@ -80,15 +84,14 @@ public class ClientBasketDiscountTest {
         basketRepository.save(new Basket("client77", "product13", 1));
         basketRepository.save(new Basket("client77", "product14", 1));
 
-
         // Act and Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/basket/client77/priceTotal")
+            .get("client_access/basket/client77/priceTotal")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("username", equalTo("client77"))
-        .body("priceTotal", equalTo(450f));
+            .statusCode(HttpStatus.OK.value())
+            .body("username", equalTo("client77"))
+            .body("priceTotal", equalTo(450f));
     }
 }

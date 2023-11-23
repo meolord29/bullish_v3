@@ -36,18 +36,17 @@ public class AdminClientCRUDTest {
         RestAssuredMockMvc.standaloneSetup(adminController);
     }
 
+    // CRUD Operations for Clients
+
+    // Create Client and return Clients
     @Test
     @DirtiesContext
-    void testAddClientReturnClients(){
-
+    void testAddClientReturnClients() {
         // Arrange
-        //Client client1 = new Client("client1", "password123");
         Client client2 = new Client("client2", "password123");
-        //clientRepository.save(client1);
         clientRepository.save(client2);
 
-        // Assert that the returned list contains both product1 and product2
-
+        // Act and Assert
         given()
         .contentType("application/json")
         .when()
@@ -58,6 +57,7 @@ public class AdminClientCRUDTest {
         .jsonPath()
         .getList(".", Client.class);
 
+        // Validate the returned list contains the added client
         given()
         .contentType("application/json")
         .when()
@@ -65,11 +65,8 @@ public class AdminClientCRUDTest {
         .then()
         .statusCode(HttpStatus.OK.value())
         .body("id", is(Arrays.asList(1, 2, 3)))
-        .body("username", equalTo(Arrays.asList("client1", "client8", "client2" )))
+        .body("username", equalTo(Arrays.asList("client1", "client8", "client2")))
         .body("password", equalTo(Arrays.asList("password123", "password123", "password123")));
-
     }
-
-    
 
 }

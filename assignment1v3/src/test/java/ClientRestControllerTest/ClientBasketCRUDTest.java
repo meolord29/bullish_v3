@@ -33,166 +33,161 @@ public class ClientBasketCRUDTest {
         RestAssuredMockMvc.standaloneSetup(clientController);
     }
 
-    // _C_RUD for Admin #1
+    // CRUD Operations for Client Baskets
+
+    // Create Basket and return Basket
     @Test
     @DirtiesContext
-    void testAddBasketReturnBasket(){
+    void testAddBasketReturnBasket() {
         // Arrange
         Basket basket1 = new Basket("client1", "product3", 20);
 
+        // Act and Assert
         given()
-        .contentType("application/json")
-        .body(basket1)  // Assuming addToBasket expects an object with 'client' and 'product' properties
+            .contentType("application/json")
+            .body(basket1)
         .when()
-        .post("client_access/basket")
+            .post("client_access/basket")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(6))
-        .body("username", equalTo("client1"))
-        .body("productName", equalTo("product3"))
-        .body("total", equalTo(20));  // Assuming the price is an integer, adjust it based on your actual implementation
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(6))
+            .body("username", equalTo("client1"))
+            .body("productName", equalTo("product3"))
+            .body("total", equalTo(20));
     }
 
-    // _C_RUD for Admin #2
+    // Update Basket and return Updated Basket
     @Test
     @DirtiesContext
-    void testAddBasketReturnUpdatedBasket(){
-
+    void testAddBasketReturnUpdatedBasket() {
         // Arrange
         Basket basket1 = new Basket("client1", "product1", 20);
 
         // Act and Assert
         given()
-        .contentType("application/json")
-        .body(basket1)  // Assuming addToBasket expects an object with 'client' and 'product' properties
+            .contentType("application/json")
+            .body(basket1)
         .when()
-        .post("client_access/basket")
+            .post("client_access/basket")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(1))
-        .body("username", equalTo("client1"))
-        .body("productName", equalTo("product1"))
-        .body("total", equalTo(30)); 
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(1))
+            .body("username", equalTo("client1"))
+            .body("productName", equalTo("product1"))
+            .body("total", equalTo(30));
     }
 
-    // C_R_UD for Admin #1
+    // Read Baskets and return Baskets
     @Test
     @DirtiesContext
-    void testReadBasketReturnBaskets(){
-
+    void testReadBasketReturnBaskets() {
         // Assert that the returned list contains both product1 and product2
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/basket/client1/all")
+            .get("client_access/basket/client1/all")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo(Arrays.asList("client1", "client1")))
-        .body("productName", equalTo(Arrays.asList("product1", "product2")))
-        .body("total", equalTo(Arrays.asList(10, 20)));
-        }
-
-    
-
-    // C_R_UD for Admin #2
-    @Test
-    @DirtiesContext
-    void testReadBasketReturnNoBasketExist(){
-
-        // Act and Assert
-        given()
-        .contentType("application/json")
-        .when()
-        .get("client_access/basket/client2/all")
-        .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(Arrays.asList(1, 2)))
+            .body("username", equalTo(Arrays.asList("client1", "client1")))
+            .body("productName", equalTo(Arrays.asList("product1", "product2")))
+            .body("total", equalTo(Arrays.asList(10, 20)));
     }
 
-
-    // CRU_D_ for Admin #1
+    // Read Baskets and return No Basket Exists
     @Test
     @DirtiesContext
-    void testDeletePartialBasketReturnBasket(){
+    void testReadBasketReturnNoBasketExist() {
+        // Act and Assert
+        given()
+            .contentType("application/json")
+        .when()
+            .get("client_access/basket/client2/all")
+        .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
 
+    // Delete Partial Basket and return Basket
+    @Test
+    @DirtiesContext
+    void testDeletePartialBasketReturnBasket() {
         // Arrange
         Basket basket = new Basket("client1", "product2", 10);
 
         // Act
         given()
-        .contentType("application/json")
-        .body(basket) 
+            .contentType("application/json")
+            .body(basket)
         .when()
-        .delete("client_access/basket")
+            .delete("client_access/basket")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", equalTo(2))
-        .body("username", equalTo("client1"))
-        .body("productName", equalTo("product2"))
-        .body("total", equalTo(10));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", equalTo(2))
+            .body("username", equalTo("client1"))
+            .body("productName", equalTo("product2"))
+            .body("total", equalTo(10));
 
-        //Assert
+        // Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/basket/client1/all")
+            .get("client_access/basket/client1/all")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo(Arrays.asList("client1", "client1")))
-        .body("productName", equalTo(Arrays.asList("product1", "product2")))
-        .body("total", equalTo(Arrays.asList(10, 10)));
-        }
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(Arrays.asList(1, 2)))
+            .body("username", equalTo(Arrays.asList("client1", "client1")))
+            .body("productName", equalTo(Arrays.asList("product1", "product2")))
+            .body("total", equalTo(Arrays.asList(10, 10)));
+    }
 
-
-    // CRU_D_ for Admin #2
+    // Delete All Baskets and return Basket
     @Test
     @DirtiesContext
-    void testDeleteAllBasketReturnBasket(){
+    void testDeleteAllBasketReturnBasket() {
         // Arrange
         Basket basket = new Basket("client1", "product2", 20);
 
         // Act
         given()
-        .contentType("application/json")
-        .body(basket) 
+            .contentType("application/json")
+            .body(basket)
         .when()
-        .delete("client_access/basket")
+            .delete("client_access/basket")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", equalTo(2))
-        .body("username", equalTo("client1"))
-        .body("productName", equalTo("product2"))
-        .body("total", equalTo(20));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", equalTo(2))
+            .body("username", equalTo("client1"))
+            .body("productName", equalTo("product2"))
+            .body("total", equalTo(20));
 
-        //Assert
+        // Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("client_access/basket/client1/all")
+            .get("client_access/basket/client1/all")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1)))
-        .body("username", equalTo(Arrays.asList("client1")))
-        .body("productName", equalTo(Arrays.asList("product1")))
-        .body("total", equalTo(Arrays.asList(10)));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(Arrays.asList(1)))
+            .body("username", equalTo(Arrays.asList("client1")))
+            .body("productName", equalTo(Arrays.asList("product1")))
+            .body("total", equalTo(Arrays.asList(10)));
     }
 
+    // Delete Basket and return Bad Request
     @Test
     @DirtiesContext
-    void testDeleteBasketReturnBadRequest(){
+    void testDeleteBasketReturnBadRequest() {
         // Arrange
         Basket basket = new Basket("client1", "product2", 30);
 
         // Act and Assert
         given()
-        .contentType("application/json")
-        .body(basket) 
+            .contentType("application/json")
+            .body(basket)
         .when()
-        .delete("client_access/basket")
+            .delete("client_access/basket")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
 

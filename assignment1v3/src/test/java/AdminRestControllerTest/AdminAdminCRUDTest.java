@@ -33,40 +33,14 @@ public class AdminAdminCRUDTest {
         RestAssuredMockMvc.standaloneSetup(adminController);
     }
 
-    // _C_RUD for Admin #1
+    // CRUD Operations for Admin #1
+
+    // Create Admin and return Admin
     @Test
     @DirtiesContext
-    void testAddAdminReturnAdmin(){
+    void testAddAdminReturnAdmin() {
         // Arrange
         Admin admin = new Admin("admin1", "password123");
-
-        given()
-        .contentType("application/json")
-        .body(admin)
-        .when().post("admin_access/admins/admin").then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-    }
-
-    // _C_RUD for Admin #2
-    @Test
-    @DirtiesContext
-    void testAddAdminReturnAdminAlreadyExist(){
-
-        // Arrange
-        Admin admin = new Admin("admin1", "password123");
-
-        given()
-        .contentType("application/json")
-        .body(admin)
-        .when().post("admin_access/admins/admin").then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
 
         // Act and Assert
         given()
@@ -75,245 +49,271 @@ public class AdminAdminCRUDTest {
         .when()
             .post("admin_access/admins/admin")
         .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
+    }
+
+    // Create Admin that already exists, should return BadRequest
+    @Test
+    @DirtiesContext
+    void testAddAdminReturnAdminAlreadyExist() {
+        // Arrange
+        Admin admin = new Admin("admin1", "password123");
+
+        // Act and Assert
+        given()
+            .contentType("application/json")
+            .body(admin)
+        .when()
+            .post("admin_access/admins/admin")
+        .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
+
+        given()
+            .contentType("application/json")
+            .body(admin)
+        .when()
+            .post("admin_access/admins/admin")
+        .then()
             .statusCode(HttpStatus.BAD_REQUEST.value());
-
     }
 
+    // Read Admin and return Admins
     @Test
     @DirtiesContext
-    void testAddAdminsReturnAdmins(){
+    void testAddAdminsReturnAdmins() {
         // Arrange
         Admin admin = new Admin("admin1", "password123");
 
+        // Create Admin
         given()
-        .contentType("application/json")
-        .body(admin)
+            .contentType("application/json")
+            .body(admin)
         .when()
-        .post("admin_access/admins/admin1")
+            .post("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
 
-        // Assert that the returned list contains both product1 and product2
+        // Assert that the returned list contains both RootAdmin and admin1
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("admin_access/admins")
+            .get("admin_access/admins")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(Arrays.asList(1, 2)))
-        .body("username", equalTo(Arrays.asList("RootAdmin", "admin1")))
-        .body("password", equalTo(Arrays.asList("password", "password123")));
-
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(Arrays.asList(1, 2)))
+            .body("username", equalTo(Arrays.asList("RootAdmin", "admin1")))
+            .body("password", equalTo(Arrays.asList("password", "password123")));
     }
 
-    // C_R_UD for Admin #1
+    // Read Admin and return Admin
     @Test
     @DirtiesContext
-    void testReadAdminReturnAdmin(){
+    void testReadAdminReturnAdmin() {
         // Arrange
         Admin admin = new Admin("admin1", "password123");
 
+        // Create Admin
         given()
-        .contentType("application/json")
-        .body(admin)
+            .contentType("application/json")
+            .body(admin)
         .when()
-        .post("admin_access/admins/admin1")
+            .post("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
 
         // Act and Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+            .get("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
     }
 
-    // C_R_UD for Admin #2
+    // Read Admin that doesn't exist, should return NotFound
     @Test
     @DirtiesContext
-    void testReadAdminReturnNoAdminExist(){
-
+    void testReadAdminReturnNoAdminExist() {
         // Act and Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+            .get("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    // CR_U_D for Admin #1
+    // Update Admin and return Admin
     @Test
     @DirtiesContext
-    void testUpdateAdminReturnAdmin(){
-
+    void testUpdateAdminReturnAdmin() {
+        // Arrange
         Admin adminInit = new Admin("admin1", "password123");
-
         Admin adminUpdated = new Admin("admin1", "newPassword456");
 
-        // Arrange
+        // Create Admin
         given()
-        .contentType("application/json")
-        .body(adminInit)
+            .contentType("application/json")
+            .body(adminInit)
         .when()
-        .post("admin_access/admins/admin1")
+            .post("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
 
+        // Read Admin and Assert
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+            .get("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
 
         // Act and Assert - Updating the admin
         given()
-        .contentType("application/json")
-        .body(adminUpdated)
+            .contentType("application/json")
+            .body(adminUpdated)
         .when()
-        .put("admin_access/admins/admin")
+            .put("admin_access/admins/admin")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("newPassword456"));
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("newPassword456"));
 
-        // checking that the admin was updated by requesting the updated admin and checking it against the expected attributes
+        // Check that the admin was updated
         given()
-        .contentType("application/json")
+            .contentType("application/json")
         .when()
-        .get("admin_access/admins/admin1")
+            .get("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("newPassword456"));
-
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("newPassword456"));
     }
 
-    // CR_U_D for Admin #2
+    // Update Admin that doesn't exist, should return NotFound
     @Test
     @DirtiesContext
-    void testUpdateAdminReturnNoAdminExist(){
-
+    void testUpdateAdminReturnNoAdminExist() {
         // Arrange
         Admin adminUpdated = new Admin("admin1", "newPassword456");
 
         // Act and Assert - Updating the admin
         given()
-        .contentType("application/json")
-        .body(adminUpdated)
+            .contentType("application/json")
+            .body(adminUpdated)
         .when()
-        .put("admin_access/admins/admin")
+            .put("admin_access/admins/admin")
         .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    // CRU_D_ for Admin #1
+    // Delete Admin and return Admin
     @Test
     @DirtiesContext
-    void testDeleteAdminReturnAdmin(){
-
-        Admin adminInit = new Admin("admin1", "password123");
-
-        // Arrange
-        given()
-        .contentType("application/json")
-        .body(adminInit)
-        .when()
-        .post("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        // Act and Assert - Updating the admin
-        given()
-        .contentType("application/json")
-        .body(adminInit)
-        .when()
-        .delete("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.OK.value())
-        .body("id", is(2))
-        .body("username", equalTo("admin1"))
-        .body("password", equalTo("password123"));
-
-        // checking that the admin was deleted by trying to request the deleted admin
-        given()
-        .contentType("application/json")
-        .when()
-        .get("admin_access/admins/admin1")
-        .then()
-        .statusCode(HttpStatus.NOT_FOUND.value());
-
-    }
-
-    // CRU_D_ for Admin #2
-    @Test
-    @DirtiesContext
-    void testDeleteAdminReturnBadRequest(){
+    void testDeleteAdminReturnAdmin() {
         // Arrange
         Admin adminInit = new Admin("admin1", "password123");
 
-        // Act and Assert - Updating the admin
+        // Create Admin
         given()
-        .contentType("application/json")
-        .body(adminInit)
+            .contentType("application/json")
+            .body(adminInit)
         .when()
-        .delete("admin_access/admins/admin1")
+            .post("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
 
+        // Read Admin and Assert
+        given()
+            .contentType("application/json")
+        .when()
+            .get("admin_access/admins/admin1")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
+
+        // Act and Assert - Deleting the admin
+        given()
+            .contentType("application/json")
+            .body(adminInit)
+        .when()
+            .delete("admin_access/admins/admin1")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("id", is(2))
+            .body("username", equalTo("admin1"))
+            .body("password", equalTo("password123"));
+
+        // Check that the admin was deleted
+        given()
+            .contentType("application/json")
+        .when()
+            .get("admin_access/admins/admin1")
+        .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
+    // Delete Admin that doesn't exist, should return BadRequest
     @Test
     @DirtiesContext
-    void testDeleteRootAdminReturnBadRequest(){
+    void testDeleteAdminReturnBadRequest() {
+        // Arrange
+        Admin adminInit = new Admin("admin1", "password123");
+
+        // Act and Assert - Deleting the admin
+        given()
+            .contentType("application/json")
+            .body(adminInit)
+        .when()
+            .delete("admin_access/admins/admin1")
+        .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    // Delete RootAdmin, should return BadRequest
+    @Test
+    @DirtiesContext
+    void testDeleteRootAdminReturnBadRequest() {
         // Arrange
         Admin adminInit = new Admin("RootAdmin", "password");
 
-        // Act and Assert - Updating the admin
+        // Act and Assert - Deleting the admin
         given()
-        .contentType("application/json")
-        .body(adminInit)
+            .contentType("application/json")
+            .body(adminInit)
         .when()
-        .delete("admin_access/admins/admin1")
+            .delete("admin_access/admins/admin1")
         .then()
-        .statusCode(HttpStatus.BAD_REQUEST.value());
-
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
 }
+
