@@ -18,6 +18,8 @@ import com.bullish.assignment1v3.service.contracts.product.ProductUpdatableServi
 import com.bullish.assignment1v3.service.contracts.product.ProductsReadableService;
 
 import jakarta.transaction.Transactional;
+
+
 @Service
 public class ProductService 
         implements ProductAddableService, ProductReadableService, ProductUpdatableService, ProductDeletableService, ProductsReadableService {
