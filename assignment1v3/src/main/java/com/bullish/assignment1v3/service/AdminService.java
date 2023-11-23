@@ -14,7 +14,6 @@ import com.bullish.assignment1v3.model.store.Product;
 import com.bullish.assignment1v3.model.users.Admin;
 import com.bullish.assignment1v3.model.users.Client;
 import com.bullish.assignment1v3.repository.AdminRepository;
-import com.bullish.assignment1v3.repository.ProductRepository;
 import com.bullish.assignment1v3.service.contracts.admin.AdminAddableService;
 import com.bullish.assignment1v3.service.contracts.admin.AdminDeletableService;
 import com.bullish.assignment1v3.service.contracts.admin.AdminReadableService;
@@ -46,9 +45,6 @@ ClientReadableService, ClientsReadableService
 
     @Autowired
     private BasketService basketService;
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Autowired
     private ClientService clientService;
