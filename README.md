@@ -35,7 +35,7 @@ Test Application: mvn test
         Status: 201 CREATED
         Body: Created Admin object
 
-Update Admin
+### Update Admin
 
     Request:
         Method: PUT
@@ -45,7 +45,7 @@ Update Admin
         Status: 200 OK if admin updated, 404 NOT FOUND otherwise
         Body: Updated Admin object
 
-Remove Admin
+### Remove Admin
 
     Request:
         Method: DELETE
@@ -55,8 +55,8 @@ Remove Admin
         Status: 200 OK if admin removed, 404 NOT FOUND otherwise
         Body: Removed Admin object
 
-Client Operations
-Get All Clients
+## Client Operations
+### Get All Clients
 
     Request:
         Method: GET
@@ -65,7 +65,7 @@ Get All Clients
         Status: 200 OK
         Body: List of Client objects
 
-Get Client by Username
+### Get Client by Username
 
     Request:
         Method: GET
@@ -75,8 +75,8 @@ Get Client by Username
         Status: 200 OK if client found, 400 BAD REQUEST otherwise
         Body: Client object
 
-Product Operations
-Get All Products
+## Product Operations
+### Get All Products
 
     Request:
         Method: GET
@@ -85,7 +85,7 @@ Get All Products
         Status: 200 OK
         Body: List of Product objects
 
-Get Product by Name
+### Get Product by Name
 
     Request:
         Method: GET
@@ -95,7 +95,7 @@ Get Product by Name
         Status: 200 OK if product found, 404 NOT FOUND otherwise
         Body: Product object
 
-Create Product
+### Create Product
 
     Request:
         Method: POST
@@ -105,7 +105,7 @@ Create Product
         Status: 201 CREATED
         Body: Created Product object
 
-Update Product
+### Update Product
 
     Request:
         Method: PUT
@@ -115,7 +115,7 @@ Update Product
         Status: 200 OK if product updated, 404 NOT FOUND otherwise
         Body: Updated Product object
 
-Remove Product
+### Remove Product
 
     Request:
         Method: DELETE
